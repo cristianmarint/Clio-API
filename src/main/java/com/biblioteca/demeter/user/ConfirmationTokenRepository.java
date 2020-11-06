@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationToken, Long> {
-    Optional<ConfirmationToken> findByConfirmationTokenByConfirmationToken(String token);
+interface ConfirmationTokenRepository extends CrudRepository<ConfirmationToken, Long> {
+    Optional<ConfirmationToken> findConfirmationTokenByConfirmationToken(String token);
 }

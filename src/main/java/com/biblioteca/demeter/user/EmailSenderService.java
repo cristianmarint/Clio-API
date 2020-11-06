@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class EmailSenderService {
+
     private JavaMailSender javaMailSender;
 
     @Async
-    public void sendEmail(SimpleMailMessage email){
+    public void sendEmail(SimpleMailMessage email) {
         javaMailSender.send(email);
     }
 }

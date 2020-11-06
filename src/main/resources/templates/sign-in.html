@@ -1,0 +1,23 @@
+<!--
+  ~ @Author: cristianmarint
+  ~ @Date: 5/11/20 20:21
+  -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in</title>
+</head>
+<body>
+    <form role="form" th:action="@{/sign-in}" th:method="post">
+        <label>Username</label>
+        <input type="text" name="username">
+
+        <label>Password</label>
+        <input type="password" name="password">
+
+        <input type="submit" value="Sign in">
+    </form>
+</body>
+</html>
