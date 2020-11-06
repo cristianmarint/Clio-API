@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
 
         final SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(userMail);
-        mailMessage.setSubject("Mail Confirmation Link!");
+        mailMessage.setSubject("Account Confirmation Link!");
         mailMessage.setFrom("<MAIL>");
         mailMessage.setText(
                 "Please click on the below link to activate your account." + "http://localhost:8080/sign-up/confirm?token="
@@ -47,6 +47,8 @@ public class UserService implements UserDetailsService {
 
         final Optional<User> optionalUser = userRepository.findByEmail(email);
 
+        System.out.println(optionalUser);
+
         return optionalUser.orElseThrow(() -> new UsernameNotFoundException(MessageFormat.format("User with email {0} cannot be found.", email)));
 
     }
@@ -56,6 +58,8 @@ public class UserService implements UserDetailsService {
         final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encryptedPassword);
+
+        user.setEnabled(true);
 
         final User createdUser = userRepository.save(user);
 

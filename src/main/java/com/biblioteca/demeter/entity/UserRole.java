@@ -5,7 +5,7 @@
 
 package com.biblioteca.demeter.entity;
 
-enum UserRole {
+public enum UserRole {
 
     ADMIN, USER
 }
