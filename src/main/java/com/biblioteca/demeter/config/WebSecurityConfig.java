@@ -21,9 +21,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
-                .antMatchers("/sign-up/**","sign-in/**")
+                .antMatchers("/sign-up/**", "/sign-in/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -34,8 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
+
 }

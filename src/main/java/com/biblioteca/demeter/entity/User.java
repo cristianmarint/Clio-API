@@ -25,12 +25,17 @@ import java.util.Collections;
 @AllArgsConstructor
 @Entity(name = "Users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
+    private String surname;
+
     private String email;
+
     private String password;
 
     @Builder.Default
@@ -43,38 +48,39 @@ public class User implements UserDetails {
     private Boolean enabled = false;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
         final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singleton(simpleGrantedAuthority);
+        return Collections.singletonList(simpleGrantedAuthority);
     }
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return email;
     }
 
     @Override
-    public boolean isAccountNonExpired(){
+    public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked(){
+    public boolean isAccountNonLocked() {
         return !locked;
     }
 
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return enabled;
     }
 }

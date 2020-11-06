@@ -17,30 +17,39 @@ import java.util.Optional;
 @Controller
 @AllArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     private final ConfirmationTokenService confirmationTokenService;
 
     @GetMapping("/sign-in")
-    String signIn(){
+    String signIn() {
+
         return "sign-in";
     }
 
     @GetMapping("/sign-up")
-    String signUpPage(User user){
+    String signUpPage(User user) {
+
         return "sign-up";
     }
 
     @PostMapping("/sign-up")
-    String signUp(User user){
+    String signUp(User user) {
+
         userService.signUpUser(user);
+
         return "redirect:/sign-in";
     }
 
     @GetMapping("/sign-up/confirm")
-    String confirmMail(@RequestParam("token") String token){
-        Optional<ConfirmationToken> optionalConfirmationToke = confirmationTokenService.findConfirmationTokenByToken(token);
-        optionalConfirmationToke.ifPresent(userService::confirmuser);
+    String confirmMail(@RequestParam("token") String token) {
+
+        Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+
+        optionalConfirmationToken.ifPresent(userService::confirmUser);
+
         return "redirect:/sign-in";
     }
+
 }
