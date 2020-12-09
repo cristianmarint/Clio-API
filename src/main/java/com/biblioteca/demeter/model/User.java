@@ -5,9 +5,7 @@
 
 package com.biblioteca.demeter.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +18,8 @@ import java.time.Instant;
 
 @Data
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -38,5 +38,5 @@ public class User {
     private String email;
 
     private Instant createdDate;
-    private boolean enable;
+    private boolean enabled;
 }
