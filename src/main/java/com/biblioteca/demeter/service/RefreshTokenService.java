@@ -9,7 +9,6 @@ import com.biblioteca.demeter.exceptions.DelimiterException;
 import com.biblioteca.demeter.model.RefreshToken;
 import com.biblioteca.demeter.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,9 +16,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@Transactional
 @AllArgsConstructor
-@NoArgsConstructor
+@Transactional
 public class RefreshTokenService {
     private RefreshTokenRepository refreshTokenRepository;
 
