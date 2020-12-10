@@ -27,14 +27,14 @@ public class MailService {
     void sendMail(NotificationEmail notificationEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom("cristianmarint@gmail.com");
+            messageHelper.setFrom("accounts@demeter.com");
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
             messageHelper.setText(notificationEmail.getBody());
         };
         try{
             mailSender.send(messagePreparator);
-            log.info("Activation email sent!!");
+            log.info("Activation email sent to "+notificationEmail.getRecipient());
         }catch(MailException exception){
             log.error("Exception occurred when sending mail", exception);
             throw new DelimiterException("Exception occurred when sending mail to " + notificationEmail.getRecipient() + " MailService.java",exception);

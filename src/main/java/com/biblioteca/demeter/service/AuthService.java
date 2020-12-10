@@ -17,6 +17,7 @@ import com.biblioteca.demeter.repository.UserRepository;
 import com.biblioteca.demeter.repository.VerificationTokenRepository;
 import com.biblioteca.demeter.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +35,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
@@ -52,13 +54,18 @@ public class AuthService {
         user.setCreatedDate(Instant.now());
         user.setEnabled(false);
 
-        userRepository.save(user);
+        if(userRepository.findByEmailIgnoreCase(user.getEmail()) == null){
+            userRepository.save(user);
+            String token = generateVerificationToken(user);
+            mailService.sendMail(new NotificationEmail(
+                    "Please Activate your Account", user.getEmail(),
+                    "Thank you for signing up to Demeter, " +
+                            "please click on the below url to activate your account : " +
+                            "http://localhost:8080/api/auth/accountVerification/" + token));
+        }else{
+            log.error("Email already in use "+user.getEmail());
+        }
 
-        String token = generateVerificationToken(user);
-        mailService.sendMail(new NotificationEmail("Please Activate your Account",
-                user.getEmail(), "Thank you for signing up to Spring Reddit, " +
-                "please click on the below url to activate your account : " +
-                "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
     @Transactional(readOnly = true)
