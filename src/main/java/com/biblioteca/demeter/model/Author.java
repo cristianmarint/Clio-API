@@ -35,7 +35,13 @@ public class Author {
     @Nullable
     private boolean alive = true;
 
-    @OneToMany
-    private List<Book> bookList;
     private Instant createdDate;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Book> bookList;
 }

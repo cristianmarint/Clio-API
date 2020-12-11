@@ -14,6 +14,8 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -29,13 +31,15 @@ public class Book {
     private String name;
 
     @Nullable
-    private String isbm;
+    private String isbn;
 
     @Nullable
     private String image;
 
     @Nullable
     private Instant publicationDate;
+
+    private Boolean shared=false;
 
     private Instant createdDate;
 
@@ -46,4 +50,15 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categoryList;
+
+    @ManyToMany(mappedBy = "bookList")
+    private List<Author> authorList;
 }

@@ -54,7 +54,7 @@ public class AuthService {
         user.setCreatedDate(Instant.now());
         user.setEnabled(false);
 
-        if(userRepository.findByEmailIgnoreCase(user.getEmail()) == null){
+        if(userRepository.findByEmailIgnoreCase(user.getEmail()) == null && userRepository.findByUsernameIgnoreCase(user.getUsername()) == null){
             userRepository.save(user);
             String token = generateVerificationToken(user);
             mailService.sendMail(new NotificationEmail(
@@ -65,7 +65,6 @@ public class AuthService {
         }else{
             log.error("Email already in use "+user.getEmail());
         }
-
     }
 
     @Transactional(readOnly = true)
