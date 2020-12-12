@@ -5,12 +5,12 @@
 
 package com.biblioteca.demeter.exceptions;
 
-public class DelimiterException extends RuntimeException{
-    public DelimiterException(String mensajeException, Exception exception){
+public class DemeterException extends RuntimeException{
+    public DemeterException(String mensajeException, Exception exception){
         super(mensajeException,exception);
     }
 
-    public DelimiterException(String mensajeException){
+    public DemeterException(String mensajeException){
         super(mensajeException);
     }
 }
