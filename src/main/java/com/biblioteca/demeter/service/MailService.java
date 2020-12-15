@@ -5,7 +5,7 @@
 
 package com.biblioteca.demeter.service;
 
-import com.biblioteca.demeter.exceptions.DelimiterException;
+import com.biblioteca.demeter.exceptions.DemeterException;
 import com.biblioteca.demeter.model.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class MailService {
             log.info("Activation email sent to "+notificationEmail.getRecipient());
         }catch(MailException exception){
             log.error("Exception occurred when sending mail", exception);
-            throw new DelimiterException("Exception occurred when sending mail to " + notificationEmail.getRecipient() + " MailService.java",exception);
+            throw new DemeterException("Exception occurred when sending mail to " + notificationEmail.getRecipient() + " MailService.java",exception);
         }
     }
 }

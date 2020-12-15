@@ -5,7 +5,7 @@
 
 package com.biblioteca.demeter.security;
 
-import com.biblioteca.demeter.exceptions.DelimiterException;
+import com.biblioteca.demeter.exceptions.DemeterException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new DelimiterException("Exception occurred while loading keystore", e);
+            throw new DemeterException("Exception occurred while loading keystore", e);
         }
 
     }
@@ -66,7 +66,7 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new DelimiterException("Exception occured while retrieving public key from keystore", e);
+            throw new DemeterException("Exception occured while retrieving public key from keystore", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new DelimiterException("Exception occured while " +
+            throw new DemeterException("Exception occured while " +
                     "retrieving public key from keystore", e);
         }
     }

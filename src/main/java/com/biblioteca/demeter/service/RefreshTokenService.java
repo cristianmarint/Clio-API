@@ -5,7 +5,7 @@
 
 package com.biblioteca.demeter.service;
 
-import com.biblioteca.demeter.exceptions.DelimiterException;
+import com.biblioteca.demeter.exceptions.DemeterException;
 import com.biblioteca.demeter.model.RefreshToken;
 import com.biblioteca.demeter.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
@@ -32,7 +32,7 @@ public class RefreshTokenService {
     void validateRefreshToken(String token){
         refreshTokenRepository
                 .findByToken(token)
-                .orElseThrow(()-> new DelimiterException("Invalid refresh Token RefreshTokenService.java"));
+                .orElseThrow(()-> new DemeterException("Invalid refresh Token RefreshTokenService.java"));
     }
 
     public void deleteRefreshToken(String token){

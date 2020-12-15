@@ -9,7 +9,7 @@ import com.biblioteca.demeter.dto.AuthenticationResponse;
 import com.biblioteca.demeter.dto.LoginRequest;
 import com.biblioteca.demeter.dto.RefreshTokenRequest;
 import com.biblioteca.demeter.dto.RegisterRequest;
-import com.biblioteca.demeter.exceptions.DelimiterException;
+import com.biblioteca.demeter.exceptions.DemeterException;
 import com.biblioteca.demeter.model.NotificationEmail;
 import com.biblioteca.demeter.model.User;
 import com.biblioteca.demeter.model.VerificationToken;
@@ -77,7 +77,7 @@ public class AuthService {
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DelimiterException("User not found with name - " + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new DemeterException("User not found with name - " + username));
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -94,7 +94,7 @@ public class AuthService {
 
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        fetchUserAndEnable(verificationToken.orElseThrow(() -> new DelimiterException("Invalid Token")));
+        fetchUserAndEnable(verificationToken.orElseThrow(() -> new DemeterException("Invalid Token")));
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
