@@ -33,7 +33,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryDto>> getAllCategories(){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(categoryService.getAll());
+                .body(categoryService.getAllCategories());
     }
 
     @GetMapping("/{id}")
@@ -47,13 +47,13 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(categoryService.create(categoryDto));
+                .body(categoryService.createCategory(categoryDto));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Void> updateCategory(@PathVariable(name = "id") Long id,@RequestBody CategoryDto categoryDto){
         try{
-            categoryService.update(id,categoryDto);
+            categoryService.updateCategory(id,categoryDto);
             return ResponseEntity.ok().build();
         }catch (ResourceNotFoundException exception){
             logger.error(exception.getMessage());
@@ -64,7 +64,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         try{
-            categoryService.delete(id);
+            categoryService.deleteCategory(id);
             return ResponseEntity.ok().build();
         }  catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();

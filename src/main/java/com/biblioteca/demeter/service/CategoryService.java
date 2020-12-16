@@ -34,7 +34,7 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> getAll(){
+    public List<CategoryDto> getAllCategories(){
         return categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::mapCategoryToDto)
@@ -48,14 +48,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDto create(CategoryDto categoryDto) {
+    public CategoryDto createCategory(CategoryDto categoryDto) {
         Category save=categoryRepository.save(categoryMapper.mapDtoToCategory(categoryDto));
         categoryDto.setId(save.getId());
         return categoryDto;
     }
 
 
-    public void update(Long id, CategoryDto categoryDto) throws ResourceNotFoundException{
+    public void updateCategory(Long id, CategoryDto categoryDto) throws ResourceNotFoundException{
         Optional<Category> category = categoryRepository.findById(id);
         if(category.isPresent()){
             categoryDto.setId(id);
@@ -65,7 +65,7 @@ public class CategoryService {
         }
     }
 
-    public void delete(Long id) throws ResourceNotFoundException {
+    public void deleteCategory(Long id) throws ResourceNotFoundException {
         if(categoryRepository.findById(id).isPresent()){
             categoryRepository.deleteById(id);
         }else {

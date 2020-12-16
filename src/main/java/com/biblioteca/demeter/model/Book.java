@@ -44,10 +44,6 @@ public class Book {
     private Instant createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authorId", referencedColumnName = "id")
-    private Author author;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
