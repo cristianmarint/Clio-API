@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class RefreshTokenService {
     public RefreshToken generateRefreshToken() {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken.setCreatedDate(Instant.now());
+        refreshToken.setCreatedAt(Timestamp.from(Instant.now()));
 
         return refreshTokenRepository.save(refreshToken);
     }

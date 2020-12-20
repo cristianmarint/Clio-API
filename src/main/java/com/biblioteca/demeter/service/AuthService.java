@@ -47,14 +47,15 @@ public class AuthService {
     private final RefreshTokenService refreshTokenService;
 
     public void signup(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreatedDate(Instant.now());
-        user.setEnabled(false);
 
-        if(userRepository.findByEmailIgnoreCase(user.getEmail()) == null && userRepository.findByUsernameIgnoreCase(user.getUsername()) == null){
+        if(userRepository.findByEmailIgnoreCase(registerRequest.getEmail()) == null && userRepository.findByUsernameIgnoreCase(registerRequest.getUsername()) == null)
+        {
+            User user = User
+                    .builder()
+                    .username(registerRequest.getUsername())
+                    .email(registerRequest.getEmail())
+                    .password(registerRequest.getPassword())
+                    .build();
             userRepository.save(user);
             String token = generateVerificationToken(user);
             mailService.sendMail(new NotificationEmail(
@@ -63,7 +64,7 @@ public class AuthService {
                             "please click on the below url to activate your account : " +
                             "http://localhost:8080/api/auth/accountVerification/" + token));
         }else{
-            log.error("Email already in use "+user.getEmail());
+            log.error("Email already in use "+registerRequest.getEmail());
         }
     }
 

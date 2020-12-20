@@ -11,11 +11,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
 @Data
 @Entity
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,8 +38,10 @@ public class User {
     @NotEmpty(message = "Email is required")
     private String email;
 
-    private Instant createdDate;
-    private boolean enabled;
+    @Builder.Default
+    private Timestamp createdAt= Timestamp.from(Instant.now());
+    @Builder.Default
+    private boolean enabled=false;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Book> bookList;

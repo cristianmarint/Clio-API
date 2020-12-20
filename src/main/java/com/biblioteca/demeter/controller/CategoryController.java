@@ -6,14 +6,10 @@
 package com.biblioteca.demeter.controller;
 
 import com.biblioteca.demeter.dto.CategoryDto;
-import com.biblioteca.demeter.exceptions.BadResourceException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
-import com.biblioteca.demeter.model.Category;
 import com.biblioteca.demeter.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +23,6 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories(){
         return ResponseEntity
@@ -37,10 +31,14 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(categoryService.getCategory(id));
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id) throws ResourceNotFoundException{
+        try{
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(categoryService.getCategory(id));
+        }catch (ResourceNotFoundException exception){
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
@@ -56,7 +54,6 @@ public class CategoryController {
             categoryService.updateCategory(id,categoryDto);
             return ResponseEntity.ok().build();
         }catch (ResourceNotFoundException exception){
-            logger.error(exception.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
