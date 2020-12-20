@@ -6,7 +6,6 @@
 package com.biblioteca.demeter.service;
 
 import com.biblioteca.demeter.dto.CategoryDto;
-import com.biblioteca.demeter.exceptions.DemeterException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
 import com.biblioteca.demeter.mapper.CategoryMapper;
 import com.biblioteca.demeter.model.Category;
@@ -33,6 +32,7 @@ public class CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+//    https://www.apascualco.com/spring-boot/spring-transactional/
     @Transactional(readOnly = true)
     public List<CategoryDto> getAllCategories(){
         return categoryRepository.findAll()
@@ -41,20 +41,20 @@ public class CategoryService {
                 .collect(toList());
     }
 
-    public CategoryDto getCategory(Long id){
+    @Transactional(readOnly = true)
+    public CategoryDto getCategory(Long id) throws ResourceNotFoundException {
         Category category= categoryRepository.findById(id)
-                .orElseThrow(()-> new DemeterException("Category with ID "+id+" was not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Category with ID "+id+" was not found"));
         return categoryMapper.mapCategoryToDto(category);
     }
 
-    @Transactional
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category save=categoryRepository.save(categoryMapper.mapDtoToCategory(categoryDto));
         categoryDto.setId(save.getId());
         return categoryDto;
     }
 
-
+    @Transactional
     public void updateCategory(Long id, CategoryDto categoryDto) throws ResourceNotFoundException{
         Optional<Category> category = categoryRepository.findById(id);
         if(category.isPresent()){

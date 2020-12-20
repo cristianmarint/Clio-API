@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Iterator;
 
@@ -31,12 +32,14 @@ public class UserDataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("----------USER DATALOADER----------");
         userRepository.deleteAllInBatch();
-        User user1=new User();
-        user1.setCreatedDate(Instant.now());
-        user1.setEmail("cristianmarint@gmail.com");
-        user1.setEnabled(true);
-        user1.setPassword("$2a$10$iralKLjgFstqxQ6J2yIdV.QM3zwATgGZx0l7QAvka52MfhZGbO0bG");// 123456789
-        user1.setUsername("cristianmarint");
+        User user1 = new User()
+                .builder()
+                .email("cristianmarint@gmail.com")
+                .username("cristianmarint")
+                .password("$2a$10$iralKLjgFstqxQ6J2yIdV.QM3zwATgGZx0l7QAvka52MfhZGbO0bG")// 123456789
+                .enabled(true)
+                .createdAt(Timestamp.from(Instant.now()))
+                .build();
         userRepository.save(user1);
 
         Iterator<User> iterator = userRepository.findAll().iterator();

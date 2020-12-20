@@ -13,6 +13,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
@@ -33,9 +34,11 @@ public class Author {
     private Instant dateOfBirth;
 
     @Nullable
+    @Builder.Default
     private boolean alive = true;
 
-    private Instant createdDate;
+    @Builder.Default
+    private Timestamp createdAt= Timestamp.from(Instant.now());
 
     @ManyToMany()
     @JoinTable(

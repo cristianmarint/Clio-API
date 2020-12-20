@@ -1,0 +1,36 @@
+/*
+ * @Author: cristianmarint
+ * @Date: 17/12/20 11:07
+ */
+
+package com.biblioteca.demeter.boot;
+
+import com.biblioteca.demeter.model.Author;
+import com.biblioteca.demeter.repository.AuthorRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+
+@Component
+@Order(3)
+@Slf4j
+public class AuthorDataLoader implements CommandLineRunner {
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("----------AUTHOR DATALOADER----------");
+        authorRepository.deleteAllInBatch();
+        Author author = Author.builder()
+                .name("Jostein Gaarder")
+                .dateOfBirth(Instant.parse("1952-08-12T08:25:24.00Z"))
+                .alive(true)
+                .build();
+        authorRepository.save(author);
+    }
+}

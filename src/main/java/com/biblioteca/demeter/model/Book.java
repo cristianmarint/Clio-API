@@ -13,9 +13,9 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -34,14 +34,20 @@ public class Book {
     private String isbn;
 
     @Nullable
+    private String language;
+
+    @Nullable
     private String image;
 
     @Nullable
     private Instant publicationDate;
 
+    @Nullable
+    @Builder.Default
     private Boolean shared=false;
 
-    private Instant createdDate;
+    @Builder.Default
+    private Timestamp createdAt= Timestamp.from(Instant.now());
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
