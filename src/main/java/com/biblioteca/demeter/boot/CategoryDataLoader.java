@@ -13,8 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
-
 @Component
 @Order(2)
 @Slf4j
@@ -24,7 +22,7 @@ public class CategoryDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("----------CATEGORY DATALOADER----------");
+        log.info("---------- LOADING CATEGORIES ----------");
         categoryRepository.deleteAllInBatch();
         Category category1 = Category
                 .builder()
@@ -60,10 +58,5 @@ public class CategoryDataLoader implements CommandLineRunner {
                 .description("[Description] Novela policiaca")
                 .build();
         categoryRepository.save(category5);
-
-        Iterator<Category> iterator = categoryRepository.findAll().iterator();
-        while (iterator.hasNext()){
-            log.info("{}",iterator.next().toString());
-        }
     }
 }

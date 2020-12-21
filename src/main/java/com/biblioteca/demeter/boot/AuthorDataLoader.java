@@ -24,7 +24,7 @@ public class AuthorDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("----------AUTHOR DATALOADER----------");
+        log.info("---------- LOADING AUTHORS ----------");
         authorRepository.deleteAllInBatch();
         Author author = Author.builder()
                 .name("Jostein Gaarder")
@@ -32,5 +32,12 @@ public class AuthorDataLoader implements CommandLineRunner {
                 .alive(true)
                 .build();
         authorRepository.save(author);
+
+        Author author1 = Author.builder()
+                .name("Charles Bukowski")
+                .dateOfBirth(Instant.parse("1920-08-16T08:25:24.00Z"))
+                .alive(false)
+                .build();
+        authorRepository.save(author1);
     }
 }

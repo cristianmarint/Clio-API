@@ -30,7 +30,7 @@ public class UserDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("----------USER DATALOADER----------");
+        log.info("---------- LOADING USERS ----------");
         userRepository.deleteAllInBatch();
         User user1 = new User()
                 .builder()
