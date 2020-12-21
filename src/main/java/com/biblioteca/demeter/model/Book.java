@@ -13,6 +13,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     @NotBlank(message = "Book name cannot be Empty or Null")
     private String name;
 

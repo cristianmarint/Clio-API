@@ -5,7 +5,7 @@
 
 package com.biblioteca.demeter.mapper;
 
-import com.biblioteca.demeter.dto.AuthorResponse;
+import com.biblioteca.demeter.dto.AuthorDto;
 import com.biblioteca.demeter.model.Author;
 import com.biblioteca.demeter.model.Book;
 import com.github.marlonlom.utilities.timeago.TimeAgo;
@@ -21,7 +21,7 @@ import java.util.Locale;
 public interface AuthorMapper {
     @Mapping(target = "dateOfBirth", expression = "java(mapDateOfBirthToDto(author))")
     @Mapping(target = "numberOfBooks",expression = "java(mapBooks(author.getBookList()))")
-    AuthorResponse mapAuthorToDto(Author author);
+    AuthorDto mapAuthorToDto(Author author);
     default String mapDateOfBirthToDto(Author author){
         TimeAgoMessages messages = new TimeAgoMessages.Builder().withLocale(Locale.forLanguageTag("en")).build();
         return TimeAgo.using(author.getDateOfBirth().toEpochMilli(),messages);
@@ -33,7 +33,6 @@ public interface AuthorMapper {
 
 
     @InheritInverseConfiguration
-    @Mapping(target = "dateOfBirth", ignore = true)
     @Mapping(target = "bookList", ignore = true)
-    Author mapDtoToAuthor(AuthorResponse authorResponse);
+    Author mapDtoToAuthor(AuthorDto authorDto);
 }

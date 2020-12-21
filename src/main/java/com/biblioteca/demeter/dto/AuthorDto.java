@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthorResponse {
+public class AuthorDto {
     private Long id;
     private String name;
     private Boolean alive;

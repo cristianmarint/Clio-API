@@ -13,13 +13,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class BadResourceException  extends Exception{
+public class BadRequestException extends Exception{
     private List<String> errorMessages = new ArrayList<>();
 
-    public BadResourceException() {
+    public BadRequestException() {
     }
 
-    public BadResourceException(String msg) {
-        super(msg);
+    public BadRequestException(String message) {
+        super(message);
     }
 }

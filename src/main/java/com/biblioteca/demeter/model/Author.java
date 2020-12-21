@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,7 +28,8 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Author Name cannot be Empty or Null")
+    @NotBlank(message = "Author Name cannot be Blank")
+    @Valid
     private String name;
 
     @Nullable

@@ -5,7 +5,8 @@
 
 package com.biblioteca.demeter.service;
 
-import com.biblioteca.demeter.dto.AuthorResponse;
+import com.biblioteca.demeter.dto.AuthorDto;
+import com.biblioteca.demeter.exceptions.BadRequestException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
 import com.biblioteca.demeter.mapper.AuthorMapper;
 import com.biblioteca.demeter.model.Author;
@@ -13,12 +14,16 @@ import com.biblioteca.demeter.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Validated
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
@@ -26,7 +31,7 @@ public class AuthorService {
     private AuthorMapper authorMapper;
 
     @Transactional(readOnly = true)
-    public List<AuthorResponse> getAllAuthors(){
+    public List<AuthorDto> getAllAuthors(){
         return authorRepository.findAll()
                 .stream()
                 .map(authorMapper::mapAuthorToDto)
@@ -34,9 +39,43 @@ public class AuthorService {
     }
 
     @Transactional(readOnly = true)
-    public AuthorResponse getAuthor(Long id) throws ResourceNotFoundException {
+    public AuthorDto getAuthor(@Min(1) Long id) throws ResourceNotFoundException {
         Author author = authorRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Author with "+id+" was not found"));
+                .orElseThrow(()-> new ResourceNotFoundException(id,"Author"));
         return authorMapper.mapAuthorToDto(author);
+    }
+
+    public AuthorDto createAuthor(@Valid AuthorDto authorDto) throws BadRequestException {
+        validateAuthor(authorDto);
+        Author author = authorRepository.save(authorMapper.mapDtoToAuthor(authorDto));
+        authorDto.setId(author.getId());
+        return authorDto;
+    }
+
+    @Transactional
+    public void updateAuthor(@Min(1) Long id, @Valid AuthorDto authorDto) throws BadRequestException,ResourceNotFoundException{
+        validateAuthor(authorDto);
+        if (authorRepository.findById(id).isPresent()){
+            authorDto.setId(id);
+            authorRepository.save(authorMapper.mapDtoToAuthor(authorDto));
+        }else{
+            throw new ResourceNotFoundException(id,"Author");
+        }
+    }
+
+    public void deleteAuthor(@Min(1) Long id) throws ResourceNotFoundException {
+        if (authorRepository.findById(id).isPresent()){
+            authorRepository.deleteById(id);
+        }else{
+            throw new ResourceNotFoundException(id,"Author");
+        }
+    }
+
+    public void validateAuthor(AuthorDto authorDto) throws BadRequestException{
+        if (authorDto == null) {
+            throw new BadRequestException("Author cannot be null");
+        }else if (authorDto.getName() == null){
+            throw new BadRequestException("Author name cannot be null");
+        }
     }
 }
