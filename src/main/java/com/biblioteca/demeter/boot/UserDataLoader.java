@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Iterator;
 
 @Component
 @Order(1)
@@ -42,9 +41,9 @@ public class UserDataLoader implements CommandLineRunner {
                 .build();
         userRepository.save(user1);
 
-        Iterator<User> iterator = userRepository.findAll().iterator();
-        while(iterator.hasNext()){
-            log.info("{}",iterator.next().toString());
-        }
+//        Iterator<User> iterator = userRepository.findAll().iterator();
+//        while(iterator.hasNext()){
+//            log.info("{}",iterator.next().toString());
+//        }
     }
 }

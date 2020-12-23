@@ -32,15 +32,15 @@ public class AuthController {
         return new ResponseEntity<>("User Registration Successful", OK);
     }
 
-    @GetMapping("accountVerification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token){
-        authService.verifyAccount(token);
-        return new ResponseEntity<>("Account activated successfully", OK);
-    }
-
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest){
         return authService.login(loginRequest);
+    }
+
+    @GetMapping("/account-verification/{token}")
+    public ResponseEntity<String> verifyAccount(@PathVariable String token){
+        authService.verifyAccount(token);
+        return new ResponseEntity<>("Account activated successfully", OK);
     }
 
     @PostMapping("/refresh/token")

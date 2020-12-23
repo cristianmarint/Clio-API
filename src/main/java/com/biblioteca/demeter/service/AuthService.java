@@ -54,7 +54,7 @@ public class AuthService {
                     .builder()
                     .username(registerRequest.getUsername())
                     .email(registerRequest.getEmail())
-                    .password(registerRequest.getPassword())
+                    .password(passwordEncoder.encode(registerRequest.getPassword()))
                     .build();
             userRepository.save(user);
             String token = generateVerificationToken(user);
@@ -62,7 +62,7 @@ public class AuthService {
                     "Please Activate your Account", user.getEmail(),
                     "Thank you for signing up to Demeter, " +
                             "please click on the below url to activate your account : " +
-                            "http://localhost:8080/api/auth/accountVerification/" + token));
+                            "http://localhost:8080/api/auth/account-verification/" + token));
         }else{
             log.error("Email already in use "+registerRequest.getEmail());
         }
@@ -113,7 +113,7 @@ public class AuthService {
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-        String token = jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenRequest.getRefreshToken())

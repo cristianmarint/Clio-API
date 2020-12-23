@@ -53,7 +53,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateTokenWithUsername(String username) {
+    public String generateTokenWithUserName(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(from(Instant.now()))
