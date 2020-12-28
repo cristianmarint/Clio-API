@@ -30,10 +30,10 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategories());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable Long id) throws ResourceNotFoundException{
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable(name="categoryId") Long categoryId) {
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategory(id));
+            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategory(categoryId));
         }catch (ResourceNotFoundException exception){
             return ResponseEntity.notFound().build();
         }
@@ -48,23 +48,29 @@ public class CategoryController {
         }
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> updateCategory(@PathVariable(name = "id") Long id,@RequestBody CategoryDto categoryDto){
+    @PutMapping(value = "/{categoryId}")
+    public ResponseEntity<Void> updateCategory(@PathVariable(name = "categoryId") Long categoryId,@RequestBody CategoryDto categoryDto){
         try{
-            categoryService.updateCategory(id,categoryDto);
+            categoryService.updateCategory(categoryId,categoryDto);
             return ResponseEntity.ok().build();
         }catch (ResourceNotFoundException | BadRequestException exception){
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable @Min(1) Long id) {
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable(name = "categoryId") @Min(1) Long categoryId) {
         try{
-            categoryService.deleteCategory(id);
+            categoryService.deleteCategory(categoryId);
             return ResponseEntity.accepted().build();
         }  catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/{categoryId}/books")
+    public ResponseEntity<?> getAllCategoryBooks(@PathVariable(name = "categoryId") Long categoryId){
+            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategoryBooks(categoryId));
     }
 }

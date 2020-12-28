@@ -5,11 +5,14 @@
 
 package com.biblioteca.demeter.service;
 
+import com.biblioteca.demeter.dto.BookDto;
 import com.biblioteca.demeter.dto.CategoryDto;
 import com.biblioteca.demeter.exceptions.BadRequestException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
+import com.biblioteca.demeter.mapper.BookMapper;
 import com.biblioteca.demeter.mapper.CategoryMapper;
 import com.biblioteca.demeter.model.Category;
+import com.biblioteca.demeter.repository.BookRepository;
 import com.biblioteca.demeter.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -30,7 +33,11 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private BookRepository bookRepository;
+    @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private BookMapper bookMapper;
 
 //    https://www.apascualco.com/spring-boot/spring-transactional/
     @Transactional(readOnly = true)
@@ -80,5 +87,14 @@ public class CategoryService {
         }else if (categoryDto.getName() == null){
             throw new BadRequestException("Category name cannot be null");
         }
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<BookDto> getAllCategoryBooks(Long categoryId) {
+        return bookRepository.findBooksByCategoryId(categoryId)
+                .stream()
+                .map(bookMapper::mapBookToDto)
+                .collect(toList());
     }
 }

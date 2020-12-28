@@ -22,7 +22,7 @@ public class CategoryDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("---------- LOADING CATEGORIES ----------");
+        log.info("---------- 2 - LOADING CATEGORIES ----------");
         categoryRepository.deleteAllInBatch();
         Category category1 = Category
                 .builder()

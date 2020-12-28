@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -51,11 +53,14 @@ public class Book {
     @Builder.Default
     private Timestamp createdAt= Timestamp.from(Instant.now());
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToOne()
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(targetEntity = Category.class)
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -63,6 +68,14 @@ public class Book {
     )
     private List<Category> categoryList;
 
-    @ManyToMany(mappedBy = "bookList")
+
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(targetEntity = Author.class)
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
     private List<Author> authorList;
 }

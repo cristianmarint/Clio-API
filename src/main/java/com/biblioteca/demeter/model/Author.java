@@ -14,7 +14,6 @@ import org.springframework.lang.Nullable;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
@@ -37,16 +36,11 @@ public class Author {
 
     @Nullable
     @Builder.Default
-    private boolean alive = true;
+    private Instant dateOfDeath=null;
 
     @Builder.Default
-    private Timestamp createdAt= Timestamp.from(Instant.now());
+    private Instant createdAt= Instant.now();
 
-    @ManyToMany()
-    @JoinTable(
-            name = "author_book",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
+    @ManyToMany(mappedBy = "authorList",targetEntity = Book.class)
     private List<Book> bookList;
 }

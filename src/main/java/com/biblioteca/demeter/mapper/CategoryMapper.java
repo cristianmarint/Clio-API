@@ -24,6 +24,7 @@ public interface CategoryMapper {
     }
 
     @InheritInverseConfiguration
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "bookList", ignore = true)
     Category mapDtoToCategory(CategoryDto categoryDto);
 }

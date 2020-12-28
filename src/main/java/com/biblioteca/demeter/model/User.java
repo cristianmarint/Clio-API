@@ -45,6 +45,6 @@ public class User {
     @Builder.Default
     private boolean enabled=false;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     private List<Book> bookList;
 }

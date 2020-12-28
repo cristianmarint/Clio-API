@@ -38,6 +38,6 @@ public class Category {
     @Builder.Default
     private Timestamp createdAt= Timestamp.from(Instant.now());
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "categoryList")
+    @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class)
     private List<Book> bookList;
 }

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class AuthorDto {
     private Long id;
     private String name;
-    private Boolean alive;
     private Integer numberOfBooks;
     private String dateOfBirth;
+    private String dateOfDeath;
 }
