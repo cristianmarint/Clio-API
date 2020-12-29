@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -45,6 +47,13 @@ public class User {
     @Builder.Default
     private boolean enabled=false;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch=FetchType.EAGER)
     private List<Book> bookList;
+    public void addBookToList(Book book){
+        if (bookList == null){
+            bookList = new ArrayList<Book>(Collections.singleton(book));
+        }else {
+            bookList.add(book);
+        }
+    }
 }

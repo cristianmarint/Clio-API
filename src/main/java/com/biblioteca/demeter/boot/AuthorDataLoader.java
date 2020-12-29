@@ -26,17 +26,23 @@ public class AuthorDataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("---------- 3 - LOADING AUTHORS ----------");
         authorRepository.deleteAllInBatch();
-        Author author = Author.builder()
+        Author author1 = Author.builder()
                 .name("Jostein Gaarder")
                 .dateOfBirth(Instant.parse("1952-08-12T08:25:24.00Z"))
                 .build();
-        authorRepository.save(author);
+        authorRepository.save(author1);
 
-        Author author1 = Author.builder()
+        Author author2 = Author.builder()
                 .name("Charles Bukowski")
                 .dateOfBirth(Instant.parse("1920-08-16T08:25:24.00Z"))
                 .dateOfDeath(Instant.parse("1994-03-08T08:25:24.00Z"))
                 .build();
-        authorRepository.save(author1);
+        authorRepository.save(author2);
+
+        Author author3 = Author.builder()
+                .name("Test Author")
+                .dateOfBirth(Instant.parse("1999-09-09T09:9:9.00Z"))
+                .build();
+        authorRepository.save(author3);
     }
 }

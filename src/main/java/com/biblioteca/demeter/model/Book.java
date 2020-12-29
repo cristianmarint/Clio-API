@@ -18,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -67,7 +69,13 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categoryList;
-
+    public void addCategoryToList(Category category) {
+        if (categoryList == null){
+            categoryList = new ArrayList<Category>(Collections.singleton(category));
+        }else {
+            categoryList.add(category);
+        }
+    }
 
 
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -78,4 +86,11 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authorList;
+    public void addAuthorToList(Author author){
+        if (authorList == null){
+            authorList = new ArrayList<Author>(Collections.singleton(author));
+        }else {
+            authorList.add(author);
+        }
+    }
 }

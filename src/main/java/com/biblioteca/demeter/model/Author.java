@@ -5,16 +5,15 @@
 
 package com.biblioteca.demeter.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -32,15 +31,23 @@ public class Author {
     private String name;
 
     @Nullable
-    private Instant dateOfBirth;
+    @Builder.Default
+    private Instant dateOfBirth = null;
 
     @Nullable
     @Builder.Default
-    private Instant dateOfDeath=null;
+    private Instant dateOfDeath = null;
 
     @Builder.Default
     private Instant createdAt= Instant.now();
 
-    @ManyToMany(mappedBy = "authorList",targetEntity = Book.class)
+    @ManyToMany(mappedBy = "authorList",targetEntity = Book.class, fetch=FetchType.EAGER)
     private List<Book> bookList;
+    public void addBookToList(Book book){
+        if (bookList == null){
+            bookList = new ArrayList<Book>(Collections.singleton(book));
+        }else {
+            bookList.add(book);
+        }
+    }
 }

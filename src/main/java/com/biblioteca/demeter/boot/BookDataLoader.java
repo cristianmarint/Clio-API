@@ -39,36 +39,39 @@ public class BookDataLoader  implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("---------- 4 - LOADING BOOKS ----------");
         bookRepository.deleteAllInBatch();
-        Optional<Category> category1 = categoryRepository.findById(1L);
-        Optional<Author> author1 = authorRepository.findById(1L);
+        Category category1 = categoryRepository.findCategoryById(1L);
+        Category category2 = categoryRepository.findCategoryById(2L);
+
+        Author author1 = authorRepository.findAuthorById(1L);
+        Author author2 = authorRepository.findAuthorById(2L);
+        Author author3 = authorRepository.findAuthorById(3L);
+
         Optional<User> owner = userRepository.findByUsername("cristianmarint");
 
-        Book book = Book
+        Book book1 = Book
                 .builder()
                 .name("El mundo de Sofía")
                 .isbn("9788498415384")
                 .language("spanish")
                 .image("https://imagessl4.casadellibro.com/a/l/t5/84/9788498415384.jpg")
                 .publicationDate(Instant.parse("2012-09-27T09:25:24.00Z"))
-//                .categoryList(Arrays.asList(category1.get()))
-//                .authorList(Arrays.asList(author1.get()))
                 .user(owner.get())
-                .build();
-//        log.info(String.valueOf(book));
-        bookRepository.save(book);
+        .build();
+        book1.addAuthorToList(author1);
+        book1.addCategoryToList(category1);
+        bookRepository.save(book1);
 
-        Book book1 = Book
+        Book book2 = Book
                 .builder()
                 .name("Women: A Novel\n")
                 .isbn("9780061863769")
                 .language("English")
                 .image("https://images-na.ssl-images-amazon.com/images/I/8196vY9StNL.jpg")
                 .publicationDate(Instant.parse("2009-10-13T09:25:24.00Z"))
-//                .categoryList(Arrays.asList(category1.get()))
-//                .authorList(Arrays.asList(author1.get()))
                 .user(owner.get())
                 .build();
-//        log.info(String.valueOf(book1));
-        bookRepository.save(book1);
+        book2.addAuthorToList(author2);
+        book2.addCategoryToList(category2);
+        bookRepository.save(book2);
     }
 }
