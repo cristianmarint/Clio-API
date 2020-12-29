@@ -11,6 +11,7 @@ import com.biblioteca.demeter.exceptions.BadRequestException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
 import com.biblioteca.demeter.mapper.BookMapper;
 import com.biblioteca.demeter.mapper.CategoryMapper;
+import com.biblioteca.demeter.model.Book;
 import com.biblioteca.demeter.model.Category;
 import com.biblioteca.demeter.repository.BookRepository;
 import com.biblioteca.demeter.repository.CategoryRepository;
@@ -96,5 +97,12 @@ public class CategoryService {
                 .stream()
                 .map(bookMapper::mapBookToDto)
                 .collect(toList());
+    }
+
+    @Transactional(readOnly = true)
+    public BookDto getCategoryBook(Long categoryId, Long bookId) throws ResourceNotFoundException{
+        Book book = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId);
+//                .orElseThrow(()-> new ResourceNotFoundException(bookId,"Book"));
+        return bookMapper.mapBookToDto(book);
     }
 }

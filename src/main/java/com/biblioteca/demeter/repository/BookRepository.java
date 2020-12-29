@@ -20,4 +20,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             nativeQuery = true
     )
     List<Book> findBooksByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(
+            value="select * from book_category inner join book on book_category.book_id=book.id WHERE book_category.category_id=:categoryId AND book_category.book_id=:bookId LIMIT 1",
+            nativeQuery = true
+    )
+    Book findBookByCategoryIdAndBookId(@Param("categoryId") Long categoryId, @Param("bookId") Long bookId);
 }

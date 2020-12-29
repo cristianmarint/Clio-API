@@ -5,6 +5,7 @@
 
 package com.biblioteca.demeter.controller;
 
+import com.biblioteca.demeter.dto.BookDto;
 import com.biblioteca.demeter.dto.CategoryDto;
 import com.biblioteca.demeter.exceptions.BadRequestException;
 import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
@@ -70,7 +71,16 @@ public class CategoryController {
 
 
     @GetMapping("/{categoryId}/books")
-    public ResponseEntity<?> getAllCategoryBooks(@PathVariable(name = "categoryId") Long categoryId){
+    public ResponseEntity<List<BookDto>> getAllCategoryBooks(@PathVariable(name = "categoryId") Long categoryId){
             return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategoryBooks(categoryId));
+    }
+
+    @GetMapping("/{categoryId}/books/{bookId}")
+    public ResponseEntity<BookDto> getCategoryBook(@PathVariable(name="categoryId") Long categoryId, @PathVariable(name = "bookId") Long bookId) throws ResourceNotFoundException{
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategoryBook(categoryId, bookId));
+        }catch (ResourceNotFoundException exception){
+            return ResponseEntity.notFound().build();
+        }
     }
 }
