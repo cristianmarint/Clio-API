@@ -41,7 +41,8 @@ public class AuthorDataLoader implements CommandLineRunner {
 
         Author author3 = Author.builder()
                 .name("Test Author")
-                .dateOfBirth(Instant.parse("1999-09-09T09:9:9.00Z"))
+                .dateOfBirth(Instant.parse("1920-08-16T08:25:24.00Z"))
+                .dateOfDeath(Instant.parse("1994-03-08T08:25:24.00Z"))
                 .build();
         authorRepository.save(author3);
     }

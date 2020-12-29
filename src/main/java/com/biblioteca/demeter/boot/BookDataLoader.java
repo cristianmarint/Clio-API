@@ -5,6 +5,7 @@
 
 package com.biblioteca.demeter.boot;
 
+import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
 import com.biblioteca.demeter.model.Author;
 import com.biblioteca.demeter.model.Book;
 import com.biblioteca.demeter.model.Category;
@@ -39,14 +40,15 @@ public class BookDataLoader  implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("---------- 4 - LOADING BOOKS ----------");
         bookRepository.deleteAllInBatch();
-        Category category1 = categoryRepository.findCategoryById(1L);
-        Category category2 = categoryRepository.findCategoryById(2L);
+        Category category1 = categoryRepository.findCategoryById(1L).orElseThrow(()->new ResourceNotFoundException());
+        Category category2 = categoryRepository.findCategoryById(2L).orElseThrow(()->new ResourceNotFoundException());
 
-        Author author1 = authorRepository.findAuthorById(1L);
-        Author author2 = authorRepository.findAuthorById(2L);
-        Author author3 = authorRepository.findAuthorById(3L);
+        Author author1 = authorRepository.findAuthorById(1L).orElseThrow(()->new ResourceNotFoundException());
 
-        Optional<User> owner = userRepository.findByUsername("cristianmarint");
+        Author author2 = authorRepository.findAuthorById(2L).orElseThrow(()->new ResourceNotFoundException());
+        Author author3 = authorRepository.findAuthorById(3L).orElseThrow(()->new ResourceNotFoundException());
+
+        Optional<User> owner = Optional.ofNullable(userRepository.findByUsername("cristianmarint").orElseThrow(() -> new ResourceNotFoundException()));
 
         Book book1 = Book
                 .builder()
