@@ -69,7 +69,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categoryList;
-    public void addCategoryToList(Category category) {
+    public void addToCategoryList(Category category) {
         if (categoryList == null){
             categoryList = new ArrayList<Category>(Collections.singleton(category));
         }else {
@@ -86,11 +86,17 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authorList;
-    public void addAuthorToList(Author author){
+    public void addToAuthorList(Author author){
         if (authorList == null){
             authorList = new ArrayList<Author>(Collections.singleton(author));
         }else {
             authorList.add(author);
+        }
+    }
+
+    public void removeFromCategoryList(Category category) {
+        if(categoryList!=null){
+            categoryList.remove(category);
         }
     }
 }

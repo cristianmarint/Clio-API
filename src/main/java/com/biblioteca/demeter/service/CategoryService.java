@@ -41,13 +41,17 @@ public class CategoryService {
     @Autowired
     private BookMapper bookMapper;
 
+//    /api/categories/{id}
+
 //    https://www.apascualco.com/spring-boot/spring-transactional/
     @Transactional(readOnly = true)
-    public List<CategoryDto> getAllCategories(){
-        return categoryRepository.findAll()
+    public List<CategoryDto> getAllCategories() throws ResourceNotFoundException {
+        List<CategoryDto> categoryDtoList = categoryRepository.findAll()
                 .stream()
                 .map(categoryMapper::mapCategoryToDto)
                 .collect(toList());
+        if(categoryDtoList==null) throw new ResourceNotFoundException();
+        return categoryDtoList;
     }
 
     @Transactional(readOnly = true)
@@ -59,7 +63,7 @@ public class CategoryService {
     }
 
     public CategoryDto createCategory(CategoryDto categoryDto) throws BadRequestException {
-        validateCategory(categoryDto);
+        validateCategoryDto(categoryDto);
         Category save=categoryRepository.save(categoryMapper.mapDtoToCategory(categoryDto));
         categoryDto.setId(save.getId());
         return categoryDto;
@@ -67,7 +71,7 @@ public class CategoryService {
 
     @Transactional
     public void updateCategory(Long categoryId, CategoryDto categoryDto) throws ResourceNotFoundException, BadRequestException {
-        validateCategory(categoryDto);
+        validateCategoryDto(categoryDto);
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
         if(categoryRepository.findById(categoryId).isPresent()){
             categoryDto.setId(categoryId);
@@ -86,7 +90,7 @@ public class CategoryService {
         }
     }
 
-    public void validateCategory(CategoryDto categoryDto) throws BadRequestException{
+    public void validateCategoryDto(CategoryDto categoryDto) throws BadRequestException{
         if (categoryDto == null) {
             throw new BadRequestException("Category cannot be null");
         }else if (categoryDto.getName() == null){
@@ -95,36 +99,54 @@ public class CategoryService {
     }
 
 
-//    ManyToMany
+//    /api/categories/{id}/books/{id}
 
     @Transactional(readOnly = true)
-    public List<BookDto> getAllCategoryBooks(Long categoryId) throws BadRequestException {
+    public List<BookDto> getAllCategoryBooks(Long categoryId) throws BadRequestException,ResourceNotFoundException {
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
-        return bookRepository.findBooksByCategoryId(categoryId)
+
+        List<BookDto> bookDtoList = bookRepository.findBooksByCategoryId(categoryId)
                 .stream()
                 .map(bookMapper::mapBookToDto)
                 .collect(toList());
+        if (bookDtoList == null) throw new ResourceNotFoundException();
+        return bookDtoList;
     }
 
     @Transactional(readOnly = true)
     public BookDto getCategoryBook(Long categoryId, Long bookId) throws ResourceNotFoundException, BadRequestException {
-        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId and BookId cannot be Null or Empty");
+        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
         Book book = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId).orElseThrow(()-> new ResourceNotFoundException(bookId,"Book"));
         return bookMapper.mapBookToDto(book);
     }
 
-    public Object createCategoryBookRelation(Long categoryId, Long bookId) throws ResourceNotFoundException,BadRequestException {
-        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId and BookId cannot be Null or Empty");
+    public List<BookDto> createCategoryBookRelation(Long categoryId, Long bookId) throws ResourceNotFoundException,BadRequestException {
+        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
 
         Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
         Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
 
         Optional<Book> relationExist = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId);
         if(relationExist.isEmpty()){
-            category.addBookToList(book);
-            book.addCategoryToList(category);
+            category.addToBookList(book);
+            book.addToCategoryList(category);
             categoryRepository.save(category);
         }
         return this.getAllCategoryBooks(categoryId);
+    }
+
+    public void deleteCategoryBookRelation(Long categoryId, Long bookId) throws BadRequestException, ResourceNotFoundException {
+        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
+
+        Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
+        Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
+
+        if(bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId).isPresent()){
+            category.removeFromBookList(book);
+            book.removeFromCategoryList(category);
+            bookRepository.deleteCategoryBookRelationByCategoryIdAndBookId(categoryId,bookId);
+        }else{
+            throw new ResourceNotFoundException();
+        }
     }
 }

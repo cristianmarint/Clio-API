@@ -7,9 +7,11 @@ package com.biblioteca.demeter.repository;
 
 import com.biblioteca.demeter.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +31,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBookByCategoryIdAndBookId(@Param("categoryId") Long categoryId, @Param("bookId") Long bookId);
 
     Optional<Book> findBookById(Long bookId);
+
+    @Transactional
+    @Modifying
+    @Query(
+            value="delete from book_category WHERE book_category.category_id=:categoryId AND book_category.book_id=:bookId LIMIT 1",
+            nativeQuery = true
+    )
+    void deleteCategoryBookRelationByCategoryIdAndBookId(Long categoryId, Long bookId);
 }

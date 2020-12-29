@@ -39,11 +39,17 @@ public class Category {
 
     @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class, fetch=FetchType.EAGER)
     private List<Book> bookList;
-    public void addBookToList(Book book){
+    public void addToBookList(Book book){
         if (bookList == null){
             bookList = new ArrayList<Book>(Collections.singleton(book));
         }else {
             bookList.add(book);
+        }
+    }
+
+    public void removeFromBookList(Book book) {
+        if(bookList!=null){
+            bookList.remove(book);
         }
     }
 }
