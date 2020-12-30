@@ -60,20 +60,15 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(1)
     public void getAllCategories_statusOkAndContentJSon_IfAuthenticated() throws Exception {
-        String expected = "[{\"id\":1,\"name\":\"Novela de aventuras\",\"description\":\"[Description] Novela de aventuras\",\"numberOfBooks\":1},{\"id\":2,\"name\":\"Novela de ciencia ficción\",\"description\":\"[Description] Novela de ciencia ficcion\",\"numberOfBooks\":1},{\"id\":3,\"name\":\"Cuentos de hadas\",\"description\":\"[Description] Cuentos de hadas\",\"numberOfBooks\":0},{\"id\":4,\"name\":\"Novela gotica\",\"description\":\"[Description] Novela gotica\",\"numberOfBooks\":0},{\"id\":5,\"name\":\"Novela policiaca\",\"description\":\"[Description] Novela policiaca\",\"numberOfBooks\":0}]";
-
         mvc.perform(MockMvcRequestBuilders.get("/api/categories")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest)))
 
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(expected))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @Order(2)
     public void getCategory_statusOkAndContentJson_ifAuthenticated() throws Exception{
         String expected = "{\"id\":1,\"name\":\"Novela de aventuras\",\"description\":\"[Description] Novela de aventuras\",\"numberOfBooks\":1}";
 
@@ -86,7 +81,6 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(3)
     public void getCategory_statusNotFound_ifAuthenticated() throws Exception{
         mvc.perform(MockMvcRequestBuilders.get("/api/categories/654915461414")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest)))
@@ -95,7 +89,14 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(4)
+    public void getCategory_statusBadRequest_ifAuthenticated() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/api/categories/badRequest/")
+                .header("Authorization", getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void createCategory_statusCreated_ifAllDataIsValidAndAuthenticated() throws Exception{
         String body = "{\n    \"name\": \"El categories POST\",\n    \"description\": \"[Description] El categories POST\"\n}";
         mvc.perform(post("/api/categories")
@@ -121,7 +122,6 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(6)
     public void updateCategory_statusOk_ifDataIsValidAndAuthenticated() throws Exception{
         String body = "{\n    \"name\": \"El Pepe\",\n    \"description\": \"[Description] El Pepe\"\n}";
         mvc.perform(put("/api/categories/2")
@@ -134,7 +134,6 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(7)
     public void updateCategory_statusBadRequest_ifDataIsInValidAndAuthenticated() throws Exception{
         String body = "{\n    \"description\": \"[Description] El Pepe\"\n}";
         mvc.perform(put("/api/categories/1")
@@ -147,7 +146,6 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(8)
     public void updateCategory_statusNotFound_ifDataIsValidAndAuthenticated() throws Exception{
         String body = "{\n    \"name\": \"El Pepe\",\n    \"description\": \"[Description] El Pepe\"\n}";
         mvc.perform(put("/api/categories/654915461414")
@@ -160,7 +158,6 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(9)
     public void deleteCategory_statusNotContent_ifAuthenticated() throws Exception{
         mvc.perform(delete("/api/categories/1")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest)))
@@ -169,11 +166,111 @@ public class CategoryControllerTest{
     }
 
     @Test
-    @Order(10)
     public void deleteCategory_statusNotFound_ifAuthenticated() throws Exception{
         mvc.perform(delete("/api/categories/654915461414")
                 .header("Authorization",getAuthorizationBearerToken(loginRequest)))
 
                 .andExpect(status().isNotFound());
+    }
+
+    //    /api/categories/{id}/books/{id}
+    @Test
+    public void getAllCategoryBooks_statusOk_ifAuthenticated() throws Exception{
+        createCategory_statusCreated_ifAllDataIsValidAndAuthenticated();
+        mvc.perform(get("/api/categories/2/books")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAllCategoryBooks_statusNotFound_ifAuthenticated() throws Exception{
+        mvc.perform(get("/api/categories/123456789/books")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getAllCategoryBooks_statusBadRequest_ifAuthenticated() throws Exception{
+        mvc.perform(get("/api/categories/badRequest/books")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getCategoryBook_statusOk_ifAuthenticated() throws Exception{
+        createCategory_statusCreated_ifAllDataIsValidAndAuthenticated();
+        mvc.perform(get("/api/categories/2/books/2")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getCategoryBook_statusNotFound_ifAuthenticated() throws Exception{
+        createCategory_statusCreated_ifAllDataIsValidAndAuthenticated();
+        mvc.perform(get("/api/categories/2/books/123456789")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getCategoryBook_statusBadRequest_ifAuthenticated() throws Exception{
+        createCategory_statusCreated_ifAllDataIsValidAndAuthenticated();
+        mvc.perform(get("/api/categories/2/books/badRequest")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createCategoryBookRelation_statusCreated_ifAuthenticated() throws Exception{
+        mvc.perform(post("/api/categories/2/books/1")
+                .header("Authorization", getAuthorizationBearerToken(loginRequest)))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void createCategoryBookRelation_statusBadRequest_ifAuthenticated() throws Exception{
+        mvc.perform(post("/api/categories/2/books/badRequest")
+                .header("Authorization", getAuthorizationBearerToken(loginRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createCategoryBookRelation_statusNotFound_ifAuthenticated() throws Exception{
+        mvc.perform(post("/api/categories/2/books/123456789")
+                .header("Authorization", getAuthorizationBearerToken(loginRequest)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteCategoryBookRelation_statusNoContent_ifAuthenticated() throws Exception{
+        createCategoryBookRelation_statusCreated_ifAuthenticated();
+        mvc.perform(delete("/api/categories/2/books/1")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteCategoryBookRelation_statusNotfound_ifAuthenticated() throws Exception{
+        mvc.perform(delete("/api/categories/2/books/123456789")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteCategoryBookRelation_statusBadRequest_ifAuthenticated() throws Exception{
+        mvc.perform(delete("/api/categories/2/books/badRequest")
+                .header("Authorization",getAuthorizationBearerToken(loginRequest)))
+
+                .andExpect(status().isBadRequest());
     }
 }

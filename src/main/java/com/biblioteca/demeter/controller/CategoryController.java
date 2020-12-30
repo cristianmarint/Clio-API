@@ -13,6 +13,7 @@ import com.biblioteca.demeter.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategories());
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(categoryService.getAllCategories());
         }catch (ResourceNotFoundException exception){
             return ResponseEntity.notFound().build();
         }
@@ -38,7 +39,7 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> getCategory(@PathVariable(name="categoryId") Long categoryId) {
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategory(categoryId));
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(categoryService.getCategory(categoryId));
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
         }catch (ResourceNotFoundException e){
@@ -85,7 +86,7 @@ public class CategoryController {
     @GetMapping("/{categoryId}/books")
     public ResponseEntity<List<BookDto>> getAllCategoryBooks(@PathVariable(name = "categoryId") Long categoryId){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getAllCategoryBooks(categoryId));
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(categoryService.getAllCategoryBooks(categoryId));
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
         }catch (ResourceNotFoundException e){
@@ -96,7 +97,7 @@ public class CategoryController {
     @GetMapping("/{categoryId}/books/{bookId}")
     public ResponseEntity<BookDto> getCategoryBook(@PathVariable(name="categoryId") Long categoryId, @PathVariable(name = "bookId") Long bookId){
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategoryBook(categoryId, bookId));
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(categoryService.getCategoryBook(categoryId, bookId));
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
         }catch (ResourceNotFoundException e){

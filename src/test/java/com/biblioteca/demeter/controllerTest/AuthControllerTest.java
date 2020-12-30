@@ -55,7 +55,6 @@ public class AuthControllerTest {
     private static final String PASSWORD_PLAIN  = "123456789";
 
     @Test
-    @Order(1)
     public void signUp_statusOkAndMessage_ifAllDataIsValid() throws Exception{
         String body = "{\"username\":\"" + USERNAME + "\", \"password\":\""+ PASSWORD_PLAIN + "\",\"email\":\""+EMAIL+"\"}";
         mvc.perform(post("/api/auth/signup")
@@ -67,7 +66,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Order(2)
     public void verifyAccount_statusOkAndMessage_ifTokenIsValid() throws Exception {
         Long testUserId = userRepository.findByUsername(USERNAME).get().getId();
         Optional<VerificationToken> token = verificationTokenRepository.findByUserId(testUserId);
@@ -79,7 +77,6 @@ public class AuthControllerTest {
     }
 
     @Test
-    @Order(3)
     public void login_statusOk_IfAccountIsValid() throws Exception{
         String body = "{\"username\":\"" + "cristianmarint" + "\", \"password\":\""+ "123456789" + "\"}";
         mvc.perform(post("/api/auth/login")

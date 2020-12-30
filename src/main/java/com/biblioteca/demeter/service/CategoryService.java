@@ -118,7 +118,7 @@ public class CategoryService {
                 .stream()
                 .map(bookMapper::mapBookToDto)
                 .collect(toList());
-        if (bookDtoList == null) throw new ResourceNotFoundException();
+        if (bookDtoList == null || bookDtoList.isEmpty()) throw new ResourceNotFoundException();
         return bookDtoList;
     }
 
