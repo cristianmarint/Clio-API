@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
@@ -83,7 +84,15 @@ public class CategoryService {
 
     public void deleteCategory(Long categoryId) throws ResourceNotFoundException, BadRequestException {
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
-        if(categoryRepository.findById(categoryId).isPresent()){
+        Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
+
+        if(category!=null){
+            ListIterator<Book> bookListIterator = bookRepository.findBooksByCategoryId(categoryId).listIterator();
+            while(bookListIterator.hasNext()){
+                Book bookToUpdate = bookListIterator.next();
+                category.removeFromBookList(bookToUpdate);
+                bookToUpdate.removeFromCategoryList(category);
+            }
             categoryRepository.deleteById(categoryId);
         }else {
             throw new ResourceNotFoundException(categoryId,"Category");

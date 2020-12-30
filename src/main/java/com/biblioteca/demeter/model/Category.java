@@ -37,7 +37,7 @@ public class Category {
     @Builder.Default
     private Timestamp createdAt= Timestamp.from(Instant.now());
 
-    @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class, fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class, fetch=FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<Book> bookList;
     public void addToBookList(Book book){
         if (bookList == null){

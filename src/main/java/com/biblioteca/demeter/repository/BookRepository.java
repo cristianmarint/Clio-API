@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(
-            value="select * from book_category inner join book on book_category.book_id=book.id WHERE book_category.category_id=:categoryId",
+            value="select book.id,book.created_at,book.image,book.isbn,book.language,book.name,book.publication_date,book.shared from book_category inner join book on book_category.book_id=book.id WHERE book_category.category_id=:categoryId",
             nativeQuery = true
     )
     List<Book> findBooksByCategoryId(@Param("categoryId") Long categoryId);

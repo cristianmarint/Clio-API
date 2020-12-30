@@ -77,6 +77,12 @@ public class Book {
         }
     }
 
+    public void removeFromCategoryList(Category category) {
+        if(categoryList!=null){
+            categoryList.remove(category);
+        }
+    }
+
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(targetEntity = Author.class)
@@ -91,12 +97,6 @@ public class Book {
             authorList = new ArrayList<Author>(Collections.singleton(author));
         }else {
             authorList.add(author);
-        }
-    }
-
-    public void removeFromCategoryList(Category category) {
-        if(categoryList!=null){
-            categoryList.remove(category);
         }
     }
 }

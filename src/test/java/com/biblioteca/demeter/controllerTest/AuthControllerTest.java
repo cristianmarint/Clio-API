@@ -8,7 +8,6 @@ package com.biblioteca.demeter.controllerTest;
 import com.biblioteca.demeter.model.VerificationToken;
 import com.biblioteca.demeter.repository.UserRepository;
 import com.biblioteca.demeter.repository.VerificationTokenRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Order;
@@ -30,7 +29,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -58,9 +56,8 @@ public class AuthControllerTest {
 
     @Test
     @Order(1)
-    public void shouldRegisterUser() throws Exception{
+    public void signUp_statusOkAndMessage_ifAllDataIsValid() throws Exception{
         String body = "{\"username\":\"" + USERNAME + "\", \"password\":\""+ PASSWORD_PLAIN + "\",\"email\":\""+EMAIL+"\"}";
-        log.info("REGISTER-> "+body);
         mvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(body)
@@ -71,7 +68,7 @@ public class AuthControllerTest {
 
     @Test
     @Order(2)
-    public void shouldVerifyAccount() throws Exception {
+    public void verifyAccount_statusOkAndMessage_ifTokenIsValid() throws Exception {
         Long testUserId = userRepository.findByUsername(USERNAME).get().getId();
         Optional<VerificationToken> token = verificationTokenRepository.findByUserId(testUserId);
         mvc.perform(get("/api/auth/account-verification/"+token.get().getToken())
@@ -81,15 +78,14 @@ public class AuthControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    TODO: Fix-> springframework.security.authentication.BadCredentialsException: Bad credentials
-//    @Test
-//    @Order(3)
-//    public void shouldAuthenticateUser() throws Exception{
-//        String body = "{\"username\":\"" + "testuser" + "\", \"password\":\""+ "123456789" + "\"}";
-//        mvc.perform(post("/api/auth/login")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(body)
-//                .accept(MediaType.ALL))
-//                .andExpect(status().isOk());
-//    }
+    @Test
+    @Order(3)
+    public void login_statusOk_IfAccountIsValid() throws Exception{
+        String body = "{\"username\":\"" + "cristianmarint" + "\", \"password\":\""+ "123456789" + "\"}";
+        mvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .accept(MediaType.ALL))
+                .andExpect(status().isOk());
+    }
 }
