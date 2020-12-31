@@ -66,7 +66,7 @@ public class AuthorController {
     public ResponseEntity<Void> deleteAuthor(@PathVariable @Min(1) Long id){
         try{
             authorService.deleteAuthor(id);
-            return ResponseEntity.accepted().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (ResourceNotFoundException exception){
             return ResponseEntity.notFound().build();
         }

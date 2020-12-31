@@ -59,8 +59,8 @@ public class BookDataLoader  implements CommandLineRunner {
                 .publicationDate(Instant.parse("2012-09-27T09:25:24.00Z"))
                 .user(owner.get())
         .build();
-        book1.addAuthorToList(author1);
-        book1.addCategoryToList(category1);
+        book1.addToAuthorList(author1);
+        book1.addToCategoryList(category1);
         bookRepository.save(book1);
 
         Book book2 = Book
@@ -72,8 +72,8 @@ public class BookDataLoader  implements CommandLineRunner {
                 .publicationDate(Instant.parse("2009-10-13T09:25:24.00Z"))
                 .user(owner.get())
                 .build();
-        book2.addAuthorToList(author2);
-        book2.addCategoryToList(category2);
+        book2.addToAuthorList(author2);
+        book2.addToCategoryList(category2);
         bookRepository.save(book2);
     }
 }

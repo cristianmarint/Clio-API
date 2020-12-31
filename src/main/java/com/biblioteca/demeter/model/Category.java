@@ -5,7 +5,10 @@
 
 package com.biblioteca.demeter.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -37,13 +40,19 @@ public class Category {
     @Builder.Default
     private Timestamp createdAt= Timestamp.from(Instant.now());
 
-    @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class, fetch=FetchType.EAGER)
+    @ManyToMany(mappedBy = "categoryList",targetEntity = Book.class, fetch=FetchType.EAGER,cascade = CascadeType.REMOVE)
     private List<Book> bookList;
-    public void addBookToList(Book book){
+    public void addToBookList(Book book){
         if (bookList == null){
             bookList = new ArrayList<Book>(Collections.singleton(book));
         }else {
             bookList.add(book);
+        }
+    }
+
+    public void removeFromBookList(Book book) {
+        if(bookList!=null){
+            bookList.remove(book);
         }
     }
 }

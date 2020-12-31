@@ -20,7 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Transactional
 public class RefreshTokenService {
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshToken generateRefreshToken() {
         RefreshToken refreshToken = new RefreshToken();
