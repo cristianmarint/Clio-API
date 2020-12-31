@@ -136,7 +136,7 @@ public class CategoryService {
         Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
 
         Optional<Book> relationExist = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId);
-        if(relationExist.isEmpty()){
+        if(relationExist.isPresent()){
             category.addToBookList(book);
             book.addToCategoryList(category);
             categoryRepository.save(category);

@@ -7,7 +7,6 @@ package com.biblioteca.demeter.controllerTest;
 
 import com.biblioteca.demeter.dto.LoginRequest;
 import com.biblioteca.demeter.service.AuthService;
-import com.biblioteca.demeter.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,8 +42,6 @@ public class CategoryControllerTest{
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AuthService authService;
-    @Autowired
-    private CategoryService categoryService;
 
     @Before
     public void setup() {
