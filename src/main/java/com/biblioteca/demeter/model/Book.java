@@ -71,16 +71,14 @@ public class Book {
     private List<Category> categoryList;
     public void addToCategoryList(Category category) {
         if (categoryList == null){
-            categoryList = new ArrayList<Category>(Collections.singleton(category));
+            categoryList = new ArrayList<>(Collections.singleton(category));
         }else {
             categoryList.add(category);
         }
     }
 
     public void removeFromCategoryList(Category category) {
-        if(categoryList!=null){
-            categoryList.remove(category);
-        }
+        if(categoryList!=null) categoryList.remove(category);
     }
 
 
@@ -94,9 +92,13 @@ public class Book {
     private List<Author> authorList;
     public void addToAuthorList(Author author){
         if (authorList == null){
-            authorList = new ArrayList<Author>(Collections.singleton(author));
+            authorList = new ArrayList<>(Collections.singleton(author));
         }else {
             authorList.add(author);
         }
+    }
+
+    public void removeFromAuthorList(Author author) {
+        if (author != null) authorList.remove(author);
     }
 }

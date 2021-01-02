@@ -41,6 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**")
                 .permitAll()
 
+                .antMatchers(HttpMethod.GET,"/api/books/")
+                .permitAll()
+                .antMatchers(HttpMethod.GET,"/api/books/**")
+                .permitAll()
+
                 .antMatchers(HttpMethod.GET,"/api/categories/")
                 .permitAll()
                 .antMatchers(HttpMethod.GET,"/api/categories/**")

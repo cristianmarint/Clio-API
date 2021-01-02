@@ -43,10 +43,10 @@ public class BookDataLoader  implements CommandLineRunner {
         Category category1 = categoryRepository.findCategoryById(1L).orElseThrow(()->new ResourceNotFoundException());
         Category category2 = categoryRepository.findCategoryById(2L).orElseThrow(()->new ResourceNotFoundException());
 
-        Author author1 = authorRepository.findAuthorById(1L).orElseThrow(()->new ResourceNotFoundException());
+        Author author1 = authorRepository.findById(1L).orElseThrow(()->new ResourceNotFoundException());
 
-        Author author2 = authorRepository.findAuthorById(2L).orElseThrow(()->new ResourceNotFoundException());
-        Author author3 = authorRepository.findAuthorById(3L).orElseThrow(()->new ResourceNotFoundException());
+        Author author2 = authorRepository.findById(2L).orElseThrow(()->new ResourceNotFoundException());
+        Author author3 = authorRepository.findById(3L).orElseThrow(()->new ResourceNotFoundException());
 
         Optional<User> owner = Optional.ofNullable(userRepository.findByUsername("cristianmarint").orElseThrow(() -> new ResourceNotFoundException()));
 

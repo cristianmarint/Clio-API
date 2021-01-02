@@ -18,6 +18,11 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
+    /**
+     * finds a given book through their relation with category base on Category Id
+     * @param categoryId
+     * @return
+     */
     @Query(
             value="select book.* from book_category inner join book on book_category.book_id=book.id WHERE book_category.category_id=:categoryId",
             nativeQuery = true

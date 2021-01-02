@@ -44,6 +44,10 @@ public class CategoryService {
 
 //    /api/categories/{id}
 
+    /**
+     * @return
+     * @throws ResourceNotFoundException
+     */
 //    https://www.apascualco.com/spring-boot/spring-transactional/
     @Transactional(readOnly = true)
     public List<CategoryDto> getAllCategories() throws ResourceNotFoundException {
@@ -55,6 +59,12 @@ public class CategoryService {
         return categoryDtoList;
     }
 
+    /**
+     * @param categoryId
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long categoryId) throws ResourceNotFoundException, BadRequestException {
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
@@ -63,6 +73,11 @@ public class CategoryService {
         return categoryMapper.mapCategoryToDto(category);
     }
 
+    /**
+     * @param categoryDto
+     * @return
+     * @throws BadRequestException
+     */
     public CategoryDto createCategory(CategoryDto categoryDto) throws BadRequestException {
         validateCategoryDto(categoryDto);
         Category save=categoryRepository.save(categoryMapper.mapDtoToCategory(categoryDto));
@@ -70,6 +85,12 @@ public class CategoryService {
         return categoryDto;
     }
 
+    /**
+     * @param categoryId
+     * @param categoryDto
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
     @Transactional
     public void updateCategory(Long categoryId, CategoryDto categoryDto) throws ResourceNotFoundException, BadRequestException {
         validateCategoryDto(categoryDto);
@@ -82,6 +103,11 @@ public class CategoryService {
         }
     }
 
+    /**
+     * @param categoryId
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
     public void deleteCategory(Long categoryId) throws ResourceNotFoundException, BadRequestException {
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
         Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
@@ -94,11 +120,13 @@ public class CategoryService {
                 bookToUpdate.removeFromCategoryList(category);
             }
             categoryRepository.deleteById(categoryId);
-        }else {
-            throw new ResourceNotFoundException(categoryId,"Category");
         }
     }
 
+    /**
+     * @param categoryDto
+     * @throws BadRequestException
+     */
     public void validateCategoryDto(CategoryDto categoryDto) throws BadRequestException{
         if (categoryDto == null) {
             throw new BadRequestException("Category cannot be null");
@@ -110,6 +138,12 @@ public class CategoryService {
 
 //    /api/categories/{id}/books/{id}
 
+    /**
+     * @param categoryId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
     @Transactional(readOnly = true)
     public List<BookDto> getAllCategoryBooks(Long categoryId) throws BadRequestException,ResourceNotFoundException {
         if (categoryId == null) throw new BadRequestException("CategoryId cannot be Null or Empty");
@@ -122,6 +156,13 @@ public class CategoryService {
         return bookDtoList;
     }
 
+    /**
+     * @param categoryId
+     * @param bookId
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
     @Transactional(readOnly = true)
     public BookDto getCategoryBook(Long categoryId, Long bookId) throws ResourceNotFoundException, BadRequestException {
         if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
@@ -129,6 +170,13 @@ public class CategoryService {
         return bookMapper.mapBookToDto(book);
     }
 
+    /**
+     * @param categoryId
+     * @param bookId
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
     public List<BookDto> createCategoryBookRelation(Long categoryId, Long bookId) throws ResourceNotFoundException,BadRequestException {
         if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
 
@@ -144,6 +192,12 @@ public class CategoryService {
         return this.getAllCategoryBooks(categoryId);
     }
 
+    /**
+     * @param categoryId
+     * @param bookId
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
     public void deleteCategoryBookRelation(Long categoryId, Long bookId) throws BadRequestException, ResourceNotFoundException {
         if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
 

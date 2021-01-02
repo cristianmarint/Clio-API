@@ -44,7 +44,7 @@ public class Category {
     private List<Book> bookList;
     public void addToBookList(Book book){
         if (bookList == null){
-            bookList = new ArrayList<Book>(Collections.singleton(book));
+            bookList = new ArrayList<>(Collections.singleton(book));
         }else {
             bookList.add(book);
         }

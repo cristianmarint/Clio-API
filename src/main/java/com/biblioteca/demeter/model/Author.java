@@ -48,9 +48,13 @@ public class Author {
     private List<Book> bookList;
     public void addToBookList(Book book){
         if (bookList == null){
-            bookList = new ArrayList<Book>(Collections.singleton(book));
+            bookList = new ArrayList<>(Collections.singleton(book));
         }else {
             bookList.add(book);
         }
+    }
+
+    public void removeFromBookList(Book book) {
+        if (book!=null) bookList.remove(book);
     }
 }
