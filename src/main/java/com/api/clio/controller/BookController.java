@@ -5,6 +5,7 @@
 
 package com.api.clio.controller;
 
+import com.api.clio.dto.AuthorDto;
 import com.api.clio.dto.BookDto;
 import com.api.clio.dto.CategoryDto;
 import com.api.clio.exceptions.BadRequestException;
@@ -58,7 +59,7 @@ public class BookController {
     }
 
     /**
-     * @param bookDto
+     * @param bookDto - book data transfer object
      * @return
      */
     @PostMapping
@@ -113,7 +114,7 @@ public class BookController {
     }
 
     /**
-     * @param bookId
+     * @param bookId - Id of the book
      * @param categoryId
      * @return
      */
@@ -136,7 +137,7 @@ public class BookController {
     @PostMapping("/{bookId}/categories/{categoryId}")
     public ResponseEntity<Void> createBookCategoryRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
         try{
-            bookService.createBookCategoryRelation(categoryId,bookId);
+            bookService.createBookCategoryRelation(bookId,categoryId);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch (BadRequestException e){
             return ResponseEntity.badRequest().build();
@@ -148,7 +149,70 @@ public class BookController {
     @DeleteMapping("/{bookId}/categories/{categoryId}")
     public ResponseEntity<Void> deleteBookCategoryRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
         try{
-            bookService.deleteBookCategoryRelation(categoryId,bookId);
+            bookService.deleteBookCategoryRelation(bookId,categoryId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+
+//    /api/books/{id}/authors/{id}
+
+    /**
+     * @param bookId
+     * @return
+     */
+    @GetMapping("/{bookId}/authors")
+    public ResponseEntity<List<AuthorDto>> getAllBookAuthors(@PathVariable(name = "bookId") Long bookId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(bookService.getAllBookAuthors(bookId));
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * @param bookId
+     * @param authorId
+     * @return
+     */
+    @GetMapping("/{bookId}/authors/{authorId}")
+    public ResponseEntity<AuthorDto> getBookAuthor(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "authorId") Long authorId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(bookService.getBookAuthor(bookId,authorId));
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * @param bookId
+     * @param authorId
+     * @return
+     */
+    @PostMapping("/{bookId}/authors/{authorId}")
+    public ResponseEntity<Void> createBookAuthorRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "authorId") Long authorId){
+        try{
+            bookService.createBookAuthorRelation(bookId,authorId);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{bookId}/authors/{authorId}")
+    public ResponseEntity<Void> deleteBookAuthorRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "authorId") Long authorId){
+        try{
+            bookService.deleteBookAuthorRelation(bookId,authorId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }catch (ResourceNotFoundException e){
             return ResponseEntity.notFound().build();
