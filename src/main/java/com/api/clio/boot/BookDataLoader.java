@@ -73,6 +73,8 @@ public class BookDataLoader  implements CommandLineRunner {
                 .user(owner.get())
                 .build();
         book2.addToAuthorList(author2);
+        book2.addToAuthorList(author3);
+        book2.addToCategoryList(category1);
         book2.addToCategoryList(category2);
         bookRepository.save(book2);
     }

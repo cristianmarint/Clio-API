@@ -5,10 +5,12 @@
 
 package com.api.clio.service;
 
+import com.api.clio.dto.AuthorDto;
 import com.api.clio.dto.BookDto;
 import com.api.clio.dto.CategoryDto;
 import com.api.clio.exceptions.BadRequestException;
 import com.api.clio.exceptions.ResourceNotFoundException;
+import com.api.clio.mapper.AuthorMapper;
 import com.api.clio.mapper.BookMapper;
 import com.api.clio.mapper.CategoryMapper;
 import com.api.clio.model.Author;
@@ -19,7 +21,6 @@ import com.api.clio.repository.BookRepository;
 import com.api.clio.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookService {
@@ -44,11 +44,13 @@ public class BookService {
     private BookMapper bookMapper;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private AuthorMapper authorMapper;
 
 //    /api/books/{id}
     /**
      * @return BookDto
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException - when bookDtoList is empty
      */
     @Transactional(readOnly = true)
     public List<BookDto> getAllBooks() throws ResourceNotFoundException{
@@ -61,7 +63,7 @@ public class BookService {
     }
 
     /**
-     * @param bookId
+     * @param bookId Id of the book
      * @return BookDto
      * @throws BadRequestException
      * @throws ResourceNotFoundException
@@ -76,8 +78,8 @@ public class BookService {
 
     /**
      * @param bookDto
-     * @return
-     * @throws BadRequestException
+     * @return bookDto
+     * @throws BadRequestException when bookDto is invalid
      */
     public BookDto createBook(BookDto bookDto) throws BadRequestException {
         validateBookDto(bookDto);
@@ -138,9 +140,11 @@ public class BookService {
         if (bookDto.getName() == null)throw new BadRequestException("Book name cannot be null");
     }
 
+//    /api/books/{bookId}/categories/{categoryId}
+
     /**
-     * @param bookId
-     * @return
+     * @param bookId - Id of the book
+     * @return category dto
      * @throws BadRequestException
      * @throws ResourceNotFoundException
      */
@@ -178,14 +182,11 @@ public class BookService {
     public List<CategoryDto> createBookCategoryRelation(Long bookId, Long categoryId) throws BadRequestException, ResourceNotFoundException {
         if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
 
-        log.info("Service createBookCategoryRelation");
-
         Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
         Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
 
         Optional<Book> relationExist = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId);
         if(!relationExist.isPresent()){
-            log.info("relationExist.isPresent()");
             category.addToBookList(book);
             book.addToCategoryList(category);
             bookRepository.save(book);
@@ -210,6 +211,82 @@ public class BookService {
             category.removeFromBookList(book);
             book.removeFromCategoryList(category);
             bookRepository.deleteCategoryBookRelationByCategoryIdAndBookId(categoryId,bookId);
+        }else{
+            throw new ResourceNotFoundException();
+        }
+    }
+
+//    /api/books/{bookId}/authors/{authorsId}
+
+    /**
+     * @param bookId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
+    public List<AuthorDto> getAllBookAuthors(Long bookId) throws BadRequestException, ResourceNotFoundException {
+        if (bookId==null) throw new BadRequestException("BookId cannot be Null or Empty");
+
+        List<AuthorDto> authorDtoList = authorRepository.findAuthorsByBookId(bookId)
+                    .stream()
+                    .map(authorMapper::mapAuthorToDto)
+                    .collect(Collectors.toList());
+        if (authorDtoList == null || authorDtoList.isEmpty()) throw new ResourceNotFoundException();
+        return authorDtoList;
+    }
+
+    /**
+     * @param bookId
+     * @param authorId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
+    public AuthorDto getBookAuthor(Long bookId,Long authorId) throws BadRequestException, ResourceNotFoundException {
+        if (bookId == null || authorId == null) throw new BadRequestException();
+        Author author = authorRepository.findAuthorByBookIdAndAuthorId(bookId,authorId).orElseThrow(()-> new ResourceNotFoundException(authorId,"Author"));
+        return authorMapper.mapAuthorToDto(author);
+    }
+
+    /**
+     * @param bookId Id of the book
+     * @param authorId Id of the books author
+     * @return
+     * @throws ResourceNotFoundException when author or book is not found
+     * @throws BadRequestException when authorId or bookId are invalid
+     */
+    public List<AuthorDto> createBookAuthorRelation(Long bookId, Long authorId) throws BadRequestException, ResourceNotFoundException {
+        if (authorId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
+
+        Author author = authorRepository.findById(authorId).orElseThrow(()->new ResourceNotFoundException(authorId,"Author"));
+        Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
+
+        Optional<Book> relationExist = bookRepository.findBookByAuthorIdAndBookId(authorId,bookId);
+        if(!relationExist.isPresent()){
+            author.addToBookList(book);
+            book.addToAuthorList(author);
+            bookRepository.save(book);
+        }
+
+        return this.getAllBookAuthors(authorId);
+    }
+
+    /**
+     * @param bookId Id of the book
+     * @param authorId Id of the books author
+     * @throws ResourceNotFoundException when author or book is not found
+     * @throws BadRequestException when authorId or bookId are invalid
+     */
+    public void deleteBookAuthorRelation(Long bookId, Long authorId) throws ResourceNotFoundException, BadRequestException {
+        if (authorId == null || bookId == null) throw new BadRequestException("AuthorId or BookId cannot be Null or Empty");
+
+        Author author = authorRepository.findById(authorId).orElseThrow(()-> new ResourceNotFoundException(authorId,"Author"));
+        Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
+
+        if(bookRepository.findBookByAuthorIdAndBookId(authorId,bookId).isPresent()){
+            author.removeFromBookList(book);
+            book.removeFromAuthorList(author);
+            bookRepository.deleteCategoryBookRelationByCategoryIdAndBookId(authorId,bookId);
         }else{
             throw new ResourceNotFoundException();
         }

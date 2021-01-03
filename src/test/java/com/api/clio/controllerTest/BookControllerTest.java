@@ -63,8 +63,16 @@ public class BookControllerTest {
 
     @Test
     public void getBook_statusOkAndContentJSon_ifAuthenticated() throws Exception{
-        String expected = "";
-        mvc.perform(MockMvcRequestBuilders.get("/api/books/1")
+        createBook_statusCreated_ifAllDataIsValidAndAuthenticated();
+        String expected = "    {\n" +
+                "        \"id\": 2,\n" +
+                "    \"name\": \"El book post update\",\n" +
+                "    \"isbn\": \"123456789\",\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "    }";
+        mvc.perform(MockMvcRequestBuilders.get("/api/books/2")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest)))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(expected))
@@ -87,7 +95,13 @@ public class BookControllerTest {
 
     @Test
     public void createBook_statusCreated_ifAllDataIsValidAndAuthenticated() throws Exception{
-        String body = "";
+        String body = "{\n" +
+                "    \"name\": \"El book post\",\n" +
+                "    \"isbn\": \"123456789\",\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "}";
         mvc.perform(post("/api/books")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -98,7 +112,11 @@ public class BookControllerTest {
 
     @Test
     public void createBook_statusBadRequest_ifDataIsNotValidAndAuthenticated() throws Exception{
-        String body = "";
+        String body = "{\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "}";
         mvc.perform(post("/api/books")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -109,7 +127,13 @@ public class BookControllerTest {
 
     @Test
     public void updateBook_statusOk_ifDataIsValidAndAuthenticated() throws Exception{
-        String body = "";
+        String body = "{\n" +
+                "    \"name\": \"El book post update\",\n" +
+                "    \"isbn\": \"123456789\",\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "}";
         mvc.perform(put("/api/books/2")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -120,7 +144,11 @@ public class BookControllerTest {
 
     @Test
     public void updateBook_statusBadRequest_ifDataIsInValidAndAuthenticated() throws Exception{
-        String body = "";
+        String body = "{\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "}";
         mvc.perform(put("/api/books/1")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -131,7 +159,13 @@ public class BookControllerTest {
 
     @Test
     public void updateBook_statusNotFound_ifDataIsValidAndAuthenticated() throws Exception{
-        String body = "";
+        String body = "{\n" +
+                "    \"name\": \"El book post update\",\n" +
+                "    \"isbn\": \"123456789\",\n" +
+                "    \"image\": \"https://media1.tenor.com/images/201645bdb77d9440ebf7f4387b4ef0c0/tenor.gif?itemid=10810607\",\n" +
+                "    \"publicationDate\": \"2021-01-01T10:25:24Z\",\n" +
+                "    \"shared\": false\n" +
+                "}";
         mvc.perform(put("/api/books/123456789")
                 .header("Authorization", getAuthorizationBearerToken(loginRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -182,7 +216,7 @@ public class BookControllerTest {
     @Test
     public void getBookCategory_statusOk_ifAuthenticated() throws Exception{
         createBook_statusCreated_ifAllDataIsValidAndAuthenticated();
-        mvc.perform(get("/api/books/2/categories/2")
+        mvc.perform(get("/api/books/2/categories/1")
                 .header("Authorization",getAuthorizationBearerToken(loginRequest)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -228,7 +262,7 @@ public class BookControllerTest {
     @Test
     public void deleteBookCategoryRelation_statusNoContent_ifAuthenticated() throws Exception{
         createBook_statusCreated_ifAllDataIsValidAndAuthenticated();
-        mvc.perform(delete("/api/books/2/categories/2")
+        mvc.perform(delete("/api/books/2/categories/1")
                 .header("Authorization",getAuthorizationBearerToken(loginRequest)))
                 .andExpect(status().isNoContent());
     }
@@ -275,7 +309,7 @@ public class BookControllerTest {
     @Test
     public void getBookAuthor_statusOk_ifAuthenticated() throws Exception{
         createBook_statusCreated_ifAllDataIsValidAndAuthenticated();
-        mvc.perform(get("/api/books/2/authors/2")
+        mvc.perform(get("/api/books/2/authors/1")
                 .header("Authorization",getAuthorizationBearerToken(loginRequest)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());

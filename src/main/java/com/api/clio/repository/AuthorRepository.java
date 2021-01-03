@@ -17,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuthorRepository extends JpaRepository<Author, Long> {
@@ -25,4 +26,10 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
             nativeQuery = true
     )
     List<Author> findAuthorsByBookId(@Param("bookId") Long bookId);
+
+    @Query(
+            value="select author.* from book_author inner join author on book_author.book_id=author.id WHERE book_author.author_id=:authorId AND book_author.book_id=:bookId LIMIT 1",
+            nativeQuery = true
+    )
+    Optional<Author> findAuthorByBookIdAndAuthorId(Long bookId, Long authorId);
 }
