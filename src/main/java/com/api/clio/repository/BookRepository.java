@@ -49,4 +49,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             nativeQuery = true
     )
     void deleteCategoryBookRelationByCategoryIdAndBookId(Long categoryId, Long bookId);
+
+    @Query(
+            value="select book.* from book_author inner join book on book_author.book_id=book.id WHERE book_author.author_id=:authorId AND book_author.book_id=:bookId LIMIT 1",
+            nativeQuery = true
+    )
+    Optional<Book> findBookByAuthorIdAndBookId(Long authorId, Long bookId);
 }
