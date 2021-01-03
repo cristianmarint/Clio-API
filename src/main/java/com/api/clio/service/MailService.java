@@ -5,7 +5,7 @@
 
 package com.api.clio.service;
 
-import com.api.clio.exceptions.DemeterException;
+import com.api.clio.exceptions.ClioException;
 import com.api.clio.model.NotificationEmail;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class MailService {
             log.info("Activation email sent to "+notificationEmail.getRecipient());
         }catch(MailException exception){
             log.error("Exception occurred when sending mail", exception);
-            throw new DemeterException("Exception occurred when sending mail to " + notificationEmail.getRecipient() + " MailService.java",exception);
+            throw new ClioException("Exception occurred when sending mail to " + notificationEmail.getRecipient() + " MailService.java",exception);
         }
     }
 }

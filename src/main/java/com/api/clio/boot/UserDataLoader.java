@@ -3,10 +3,10 @@
  * @Date: 11/12/20 18:19
  */
 
-package com.biblioteca.demeter.boot;
+package com.api.clio.boot;
 
-import com.biblioteca.demeter.model.User;
-import com.biblioteca.demeter.repository.UserRepository;
+import com.api.clio.repository.UserRepository;
+import com.api.clio.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

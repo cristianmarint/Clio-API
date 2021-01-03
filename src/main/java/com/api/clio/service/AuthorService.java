@@ -3,14 +3,14 @@
  * @Date: 17/12/20 11:14
  */
 
-package com.biblioteca.demeter.service;
+package com.api.clio.service;
 
-import com.biblioteca.demeter.dto.AuthorDto;
-import com.biblioteca.demeter.exceptions.BadRequestException;
-import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
-import com.biblioteca.demeter.mapper.AuthorMapper;
-import com.biblioteca.demeter.model.Author;
-import com.biblioteca.demeter.repository.AuthorRepository;
+import com.api.clio.dto.AuthorDto;
+import com.api.clio.exceptions.BadRequestException;
+import com.api.clio.exceptions.ResourceNotFoundException;
+import com.api.clio.mapper.AuthorMapper;
+import com.api.clio.model.Author;
+import com.api.clio.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

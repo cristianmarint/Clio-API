@@ -5,7 +5,7 @@
 
 package com.api.clio.service;
 
-import com.api.clio.exceptions.DemeterException;
+import com.api.clio.exceptions.ClioException;
 import com.api.clio.model.RefreshToken;
 import com.api.clio.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,7 @@ public class RefreshTokenService {
     void validateRefreshToken(String token){
         refreshTokenRepository
                 .findByToken(token)
-                .orElseThrow(()-> new DemeterException("Invalid refresh Token RefreshTokenService.java"));
+                .orElseThrow(()-> new ClioException("Invalid refresh Token RefreshTokenService.java"));
     }
 
     public void deleteRefreshToken(String token){

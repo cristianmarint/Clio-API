@@ -6,6 +6,7 @@
 package com.api.clio.service;
 
 import com.api.clio.dto.BookDto;
+import com.api.clio.dto.CategoryDto;
 import com.api.clio.exceptions.BadRequestException;
 import com.api.clio.exceptions.ResourceNotFoundException;
 import com.api.clio.mapper.BookMapper;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,5 +136,82 @@ public class BookService {
     public void validateBookDto(BookDto bookDto) throws BadRequestException{
         if (bookDto == null) throw new BadRequestException("Book cannot be null");
         if (bookDto.getName() == null)throw new BadRequestException("Book name cannot be null");
+    }
+
+    /**
+     * @param bookId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
+    public List<CategoryDto> getAllBookCategories(Long bookId) throws BadRequestException, ResourceNotFoundException {
+        if (bookId==null) throw new BadRequestException("BookId cannot be Null or Empty");
+
+        List<CategoryDto> categoryDtoList = categoryRepository.findCategoryByBookId(bookId)
+                    .stream()
+                    .map(categoryMapper::mapCategoryToDto)
+                    .collect(Collectors.toList());
+        if (categoryDtoList == null || categoryDtoList.isEmpty()) throw new ResourceNotFoundException();
+        return categoryDtoList;
+    }
+
+    /**
+     * @param bookId
+     * @param categoryId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
+    public CategoryDto getBookCategory(Long bookId,Long categoryId) throws BadRequestException, ResourceNotFoundException {
+        if (bookId == null || categoryId == null) throw new BadRequestException();
+        Category category = categoryRepository.findCategoryByBookIdAndCategoryId(bookId,categoryId).orElseThrow(()-> new ResourceNotFoundException(categoryId,"Category"));
+        return categoryMapper.mapCategoryToDto(category);
+    }
+
+    /**
+     * @param bookId
+     * @param categoryId
+     * @return
+     * @throws BadRequestException
+     * @throws ResourceNotFoundException
+     */
+    public List<CategoryDto> createBookCategoryRelation(Long bookId, Long categoryId) throws BadRequestException, ResourceNotFoundException {
+        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
+
+        log.info("Service createBookCategoryRelation");
+
+        Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
+        Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
+
+        Optional<Book> relationExist = bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId);
+        if(!relationExist.isPresent()){
+            log.info("relationExist.isPresent()");
+            category.addToBookList(book);
+            book.addToCategoryList(category);
+            bookRepository.save(book);
+        }
+
+        return this.getAllBookCategories(categoryId);
+    }
+
+    /**
+     * @param bookId
+     * @param categoryId
+     * @throws ResourceNotFoundException
+     * @throws BadRequestException
+     */
+    public void deleteBookCategoryRelation(Long bookId, Long categoryId) throws ResourceNotFoundException, BadRequestException {
+        if (categoryId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
+
+        Category category = categoryRepository.findCategoryById(categoryId).orElseThrow(()->new ResourceNotFoundException(categoryId,"Category"));
+        Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
+
+        if(bookRepository.findBookByCategoryIdAndBookId(categoryId,bookId).isPresent()){
+            category.removeFromBookList(book);
+            book.removeFromCategoryList(category);
+            bookRepository.deleteCategoryBookRelationByCategoryIdAndBookId(categoryId,bookId);
+        }else{
+            throw new ResourceNotFoundException();
+        }
     }
 }

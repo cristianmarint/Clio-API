@@ -138,7 +138,7 @@ public class CategoryController {
      * @return
      */
     @PostMapping("/{categoryId}/books/{bookId}")
-    public ResponseEntity<?> createCategoryBookRelation(@PathVariable(name = "categoryId") Long categoryId, @PathVariable(name = "bookId") Long bookId){
+    public ResponseEntity<Void> createCategoryBookRelation(@PathVariable(name = "categoryId") Long categoryId, @PathVariable(name = "bookId") Long bookId){
         try{
             categoryService.createCategoryBookRelation(categoryId,bookId);
             return ResponseEntity.status(HttpStatus.CREATED).build();

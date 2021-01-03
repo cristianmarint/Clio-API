@@ -3,17 +3,17 @@
  * @Date: 23/12/20 17:20
  */
 
-package com.biblioteca.demeter.boot;
+package com.api.clio.boot;
 
-import com.biblioteca.demeter.exceptions.ResourceNotFoundException;
-import com.biblioteca.demeter.model.Author;
-import com.biblioteca.demeter.model.Book;
-import com.biblioteca.demeter.model.Category;
-import com.biblioteca.demeter.model.User;
-import com.biblioteca.demeter.repository.AuthorRepository;
-import com.biblioteca.demeter.repository.BookRepository;
-import com.biblioteca.demeter.repository.CategoryRepository;
-import com.biblioteca.demeter.repository.UserRepository;
+import com.api.clio.model.Author;
+import com.api.clio.model.Book;
+import com.api.clio.model.Category;
+import com.api.clio.model.User;
+import com.api.clio.repository.AuthorRepository;
+import com.api.clio.repository.CategoryRepository;
+import com.api.clio.repository.UserRepository;
+import com.api.clio.exceptions.ResourceNotFoundException;
+import com.api.clio.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

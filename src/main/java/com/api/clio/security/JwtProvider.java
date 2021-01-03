@@ -5,7 +5,7 @@
 
 package com.api.clio.security;
 
-import com.api.clio.exceptions.DemeterException;
+import com.api.clio.exceptions.ClioException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +38,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new DemeterException("Exception occurred while loading keystore", e);
+            throw new ClioException("Exception occurred while loading keystore", e);
         }
 
     }
@@ -66,7 +66,7 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new DemeterException("Exception occured while retrieving public key from keystore", e);
+            throw new ClioException("Exception occured while retrieving public key from keystore", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new DemeterException("Exception occured while " +
+            throw new ClioException("Exception occured while " +
                     "retrieving public key from keystore", e);
         }
     }

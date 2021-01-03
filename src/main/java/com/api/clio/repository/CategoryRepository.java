@@ -13,6 +13,7 @@ package com.api.clio.repository;
 import com.api.clio.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             nativeQuery = true
     )
     List<Category> findCategoryByBookId(Long bookId);
+
+    @Query(
+            value="select category.* from book_category inner join category on book_category.book_id=category.id WHERE book_category.category_id=:categoryId AND book_category.book_id=:bookId LIMIT 1",
+            nativeQuery = true
+    )
+    Optional<Category> findCategoryByBookIdAndCategoryId(@Param("bookId") Long bookId, @Param("categoryId") Long categoryId);
 }

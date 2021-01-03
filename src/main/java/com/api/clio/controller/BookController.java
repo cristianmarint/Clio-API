@@ -6,6 +6,7 @@
 package com.api.clio.controller;
 
 import com.api.clio.dto.BookDto;
+import com.api.clio.dto.CategoryDto;
 import com.api.clio.exceptions.BadRequestException;
 import com.api.clio.exceptions.ResourceNotFoundException;
 import com.api.clio.service.BookService;
@@ -94,4 +95,65 @@ public class BookController {
         }
     }
 
+//    /api/books/{id}/categories/{id}
+
+    /**
+     * @param bookId
+     * @return
+     */
+    @GetMapping("/{bookId}/categories")
+    public ResponseEntity<List<CategoryDto>> getAllBookCategories(@PathVariable(name = "bookId") Long bookId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(bookService.getAllBookCategories(bookId));
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * @param bookId
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/{bookId}/categories/{categoryId}")
+    public ResponseEntity<CategoryDto> getBookCategory(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(bookService.getBookCategory(bookId,categoryId));
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * @param bookId
+     * @param categoryId
+     * @return
+     */
+    @PostMapping("/{bookId}/categories/{categoryId}")
+    public ResponseEntity<Void> createBookCategoryRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
+        try{
+            bookService.createBookCategoryRelation(categoryId,bookId);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{bookId}/categories/{categoryId}")
+    public ResponseEntity<Void> deleteBookCategoryRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
+        try{
+            bookService.deleteBookCategoryRelation(categoryId,bookId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch (ResourceNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }catch (BadRequestException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

@@ -11,7 +11,7 @@ import com.api.clio.repository.UserRepository;
 import com.api.clio.dto.AuthenticationResponse;
 import com.api.clio.dto.RefreshTokenRequest;
 import com.api.clio.dto.RegisterRequest;
-import com.api.clio.exceptions.DemeterException;
+import com.api.clio.exceptions.ClioException;
 import com.api.clio.model.NotificationEmail;
 import com.api.clio.model.User;
 import com.api.clio.repository.VerificationTokenRepository;
@@ -78,7 +78,7 @@ public class AuthService {
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new DemeterException("User not found with name - " + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ClioException("User not found with name - " + username));
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -95,7 +95,7 @@ public class AuthService {
 
     public void verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        fetchUserAndEnable(verificationToken.orElseThrow(() -> new DemeterException("Invalid Token")));
+        fetchUserAndEnable(verificationToken.orElseThrow(() -> new ClioException("Invalid Token")));
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
