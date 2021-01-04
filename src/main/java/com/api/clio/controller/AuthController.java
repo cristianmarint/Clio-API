@@ -5,8 +5,8 @@
 
 package com.api.clio.controller;
 
-import com.api.clio.dto.LoginRequest;
 import com.api.clio.dto.AuthenticationResponse;
+import com.api.clio.dto.LoginRequest;
 import com.api.clio.dto.RefreshTokenRequest;
 import com.api.clio.dto.RegisterRequest;
 import com.api.clio.service.AuthService;

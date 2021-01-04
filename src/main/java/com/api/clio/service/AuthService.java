@@ -5,15 +5,15 @@
 
 package com.api.clio.service;
 
-import com.api.clio.dto.LoginRequest;
-import com.api.clio.model.VerificationToken;
-import com.api.clio.repository.UserRepository;
 import com.api.clio.dto.AuthenticationResponse;
+import com.api.clio.dto.LoginRequest;
 import com.api.clio.dto.RefreshTokenRequest;
 import com.api.clio.dto.RegisterRequest;
 import com.api.clio.exceptions.ClioException;
 import com.api.clio.model.NotificationEmail;
 import com.api.clio.model.User;
+import com.api.clio.model.VerificationToken;
+import com.api.clio.repository.UserRepository;
 import com.api.clio.repository.VerificationTokenRepository;
 import com.api.clio.security.JwtProvider;
 import lombok.AllArgsConstructor;

@@ -30,10 +30,6 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-//    /api/books/{id}
-    /**
-     * @return ResponseEntity<List<BookDto>>
-     */
     @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks() {
         try{
@@ -43,10 +39,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookId
-     * @return
-     */
     @GetMapping("/{bookId}")
     public ResponseEntity<BookDto> getBook(@PathVariable(name = "bookId") Long bookId){
         try{
@@ -58,10 +50,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookDto - book data transfer object
-     * @return
-     */
     @PostMapping
     public ResponseEntity<?> createBook(@Valid @RequestBody BookDto bookDto){
         try{
@@ -73,7 +61,7 @@ public class BookController {
     }
 
     @PutMapping(value = "/{bookId}")
-    public ResponseEntity<Void> updateBook(@PathVariable(name = "bookId") Long bookId, @RequestBody BookDto bookDto){
+    public ResponseEntity<Void> updateBook(@PathVariable(name = "bookId") Long bookId,@Valid @RequestBody BookDto bookDto){
         try{
             bookService.updateBook(bookId, bookDto);
             return ResponseEntity.ok().build();
@@ -96,12 +84,6 @@ public class BookController {
         }
     }
 
-//    /api/books/{id}/categories/{id}
-
-    /**
-     * @param bookId
-     * @return
-     */
     @GetMapping("/{bookId}/categories")
     public ResponseEntity<List<CategoryDto>> getAllBookCategories(@PathVariable(name = "bookId") Long bookId){
         try{
@@ -113,11 +95,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookId - Id of the book
-     * @param categoryId
-     * @return
-     */
     @GetMapping("/{bookId}/categories/{categoryId}")
     public ResponseEntity<CategoryDto> getBookCategory(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
         try{
@@ -129,11 +106,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookId
-     * @param categoryId
-     * @return
-     */
     @PostMapping("/{bookId}/categories/{categoryId}")
     public ResponseEntity<Void> createBookCategoryRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "categoryId") Long categoryId){
         try{
@@ -158,13 +130,6 @@ public class BookController {
         }
     }
 
-
-//    /api/books/{id}/authors/{id}
-
-    /**
-     * @param bookId
-     * @return
-     */
     @GetMapping("/{bookId}/authors")
     public ResponseEntity<List<AuthorDto>> getAllBookAuthors(@PathVariable(name = "bookId") Long bookId){
         try{
@@ -176,11 +141,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookId
-     * @param authorId
-     * @return
-     */
     @GetMapping("/{bookId}/authors/{authorId}")
     public ResponseEntity<AuthorDto> getBookAuthor(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "authorId") Long authorId){
         try{
@@ -192,11 +152,6 @@ public class BookController {
         }
     }
 
-    /**
-     * @param bookId
-     * @param authorId
-     * @return
-     */
     @PostMapping("/{bookId}/authors/{authorId}")
     public ResponseEntity<Void> createBookAuthorRelation(@PathVariable(name = "bookId") Long bookId, @PathVariable(name = "authorId") Long authorId){
         try{
