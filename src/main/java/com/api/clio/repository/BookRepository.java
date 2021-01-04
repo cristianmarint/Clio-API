@@ -57,7 +57,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findBookByAuthorIdAndBookId(Long authorId, Long bookId);
 
     @Query(
-            value = "select book.* from book_author inner join book on book_author.author_id=author.id WHERE book_author.author_id=:authorId",
+            value = "select book.* from book_author inner join book on book_author.book_id=book.id WHERE book_author.author_id=:authorId",
             nativeQuery = true
     )
     List<Book> findBooksByAuthorId(Long authorId);
