@@ -5,15 +5,15 @@
 
 package com.api.clio.boot;
 
+import com.api.clio.exceptions.ResourceNotFoundException;
 import com.api.clio.model.Author;
 import com.api.clio.model.Book;
 import com.api.clio.model.Category;
 import com.api.clio.model.User;
 import com.api.clio.repository.AuthorRepository;
+import com.api.clio.repository.BookRepository;
 import com.api.clio.repository.CategoryRepository;
 import com.api.clio.repository.UserRepository;
-import com.api.clio.exceptions.ResourceNotFoundException;
-import com.api.clio.repository.BookRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

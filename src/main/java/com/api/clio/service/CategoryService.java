@@ -5,16 +5,16 @@
 
 package com.api.clio.service;
 
+import com.api.clio.dto.BookDto;
+import com.api.clio.dto.CategoryDto;
 import com.api.clio.exceptions.BadRequestException;
 import com.api.clio.exceptions.ResourceNotFoundException;
+import com.api.clio.mapper.BookMapper;
+import com.api.clio.mapper.CategoryMapper;
 import com.api.clio.model.Book;
 import com.api.clio.model.Category;
 import com.api.clio.repository.BookRepository;
 import com.api.clio.repository.CategoryRepository;
-import com.api.clio.dto.BookDto;
-import com.api.clio.dto.CategoryDto;
-import com.api.clio.mapper.BookMapper;
-import com.api.clio.mapper.CategoryMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +45,9 @@ public class CategoryService {
 //    /api/categories/{id}
 
     /**
-     * @return
-     * @throws ResourceNotFoundException
+     * Find all categories on database
+     * @return List<CategoryDto> List of categories
+     * @throws ResourceNotFoundException when categories were not found
      */
 //    https://www.apascualco.com/spring-boot/spring-transactional/
     @Transactional(readOnly = true)
@@ -60,10 +61,10 @@ public class CategoryService {
     }
 
     /**
-     * @param categoryId
-     * @return
-     * @throws ResourceNotFoundException
-     * @throws BadRequestException
+     * @param categoryId Id of a registered category
+     * @return CategoryDto Category data response
+     * @throws ResourceNotFoundException when category is not found
+     * @throws BadRequestException when categoryId is missing necessary values
      */
     @Transactional(readOnly = true)
     public CategoryDto getCategory(Long categoryId) throws ResourceNotFoundException, BadRequestException {
@@ -74,9 +75,10 @@ public class CategoryService {
     }
 
     /**
-     * @param categoryDto
-     * @return
-     * @throws BadRequestException
+     * creates a new category on database
+     * @param categoryDto Category Data
+     * @return CategoryDto Category Data
+     * @throws BadRequestException when CategoryDto is missing necessary values.
      */
     public CategoryDto createCategory(CategoryDto categoryDto) throws BadRequestException {
         validateCategoryDto(categoryDto);
@@ -86,10 +88,11 @@ public class CategoryService {
     }
 
     /**
-     * @param categoryId
-     * @param categoryDto
-     * @throws ResourceNotFoundException
-     * @throws BadRequestException
+     * Updates a category on database
+     * @param categoryId Category Id
+     * @param categoryDto Category Data
+     * @throws ResourceNotFoundException when Category is not found
+     * @throws BadRequestException when CategoryId is missing necessary values.
      */
     @Transactional
     public void updateCategory(Long categoryId, CategoryDto categoryDto) throws ResourceNotFoundException, BadRequestException {
