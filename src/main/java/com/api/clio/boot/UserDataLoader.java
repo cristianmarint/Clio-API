@@ -5,8 +5,8 @@
 
 package com.api.clio.boot;
 
-import com.api.clio.repository.UserRepository;
 import com.api.clio.model.User;
+import com.api.clio.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
