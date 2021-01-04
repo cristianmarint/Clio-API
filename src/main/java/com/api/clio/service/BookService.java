@@ -219,10 +219,11 @@ public class BookService {
 //    /api/books/{bookId}/authors/{authorsId}
 
     /**
-     * @param bookId
-     * @return
-     * @throws BadRequestException
-     * @throws ResourceNotFoundException
+     * Find all authors related to an book on database
+     * @param bookId Book Id
+     * @return List<AuthorDto> List of authors
+     * @throws BadRequestException when bookId is missing value
+     * @throws ResourceNotFoundException when no authors were founds
      */
     public List<AuthorDto> getAllBookAuthors(Long bookId) throws BadRequestException, ResourceNotFoundException {
         if (bookId==null) throw new BadRequestException("BookId cannot be Null or Empty");
@@ -236,11 +237,12 @@ public class BookService {
     }
 
     /**
+     * Find one author related to an book on database
      * @param bookId
      * @param authorId
-     * @return
-     * @throws BadRequestException
-     * @throws ResourceNotFoundException
+     * @return AuthorDto Author data
+     * @throws BadRequestException when bookId or authorId is missing value
+     * @throws ResourceNotFoundException when no authors were found
      */
     public AuthorDto getBookAuthor(Long bookId,Long authorId) throws BadRequestException, ResourceNotFoundException {
         if (bookId == null || authorId == null) throw new BadRequestException();
@@ -249,14 +251,15 @@ public class BookService {
     }
 
     /**
+     * Links a given author to a given book via Id's
      * @param bookId Id of the book
      * @param authorId Id of the books author
-     * @return
+     * @return List<AuthorDto> List of authors data for the book
      * @throws ResourceNotFoundException when author or book is not found
      * @throws BadRequestException when authorId or bookId are invalid
      */
     public List<AuthorDto> createBookAuthorRelation(Long bookId, Long authorId) throws BadRequestException, ResourceNotFoundException {
-        if (authorId == null || bookId == null) throw new BadRequestException("CategoryId or BookId cannot be Null or Empty");
+        if (authorId == null || bookId == null) throw new BadRequestException("AuthorId or BookId cannot be Null or Empty");
 
         Author author = authorRepository.findById(authorId).orElseThrow(()->new ResourceNotFoundException(authorId,"Author"));
         Book book = bookRepository.findBookById(bookId).orElseThrow(()->new ResourceNotFoundException(bookId,"Book"));
@@ -272,6 +275,7 @@ public class BookService {
     }
 
     /**
+     * Remove link a given author to a given book via Id's
      * @param bookId Id of the book
      * @param authorId Id of the books author
      * @throws ResourceNotFoundException when author or book is not found
