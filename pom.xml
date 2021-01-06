@@ -12,7 +12,7 @@
     <artifactId>clio</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CLIO</name>
-    <description>Book catalogs API</description>
+    <description>CLIO API now allows you to store, catalog and relate books to authors through out Http protocols</description>
 
     <properties>
         <java.version>11</java.version>
